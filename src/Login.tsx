@@ -55,6 +55,11 @@ const Login: React.FC = () => {
 
     return (
         <div className="contenedor-principal">
+            <div className='contenedor-marca'>
+                <h1>CipherTech</h1>
+                <h5>Desciframos el presente para proteger tu futuro</h5>
+            </div>
+            <div className='contenedor-login-principal'>
             <form className="contenedor-login" onSubmit={handleSubmit}>
                 <div className='contenedor-input'>
                     <div className="input-group mb-3">
@@ -102,6 +107,7 @@ const Login: React.FC = () => {
                     </button>
                 </div>
             </form>
+            </div>
         </div>
     );
 };
