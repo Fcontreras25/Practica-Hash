@@ -8,9 +8,14 @@ body{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: rgb(255, 253, 253);
     padding: 20px;
-    width: 330px;
+    width: 340px;
+    height: 400px;
     margin: 70px 100px;
-    border-radius: 2px;
+    border-radius: 5px;
+}
+
+.contenedor-principal h2{
+    margin: 35px;
 }
 
 .btn{
@@ -32,7 +37,7 @@ button.btn1 {
 }
 
 button.btn1:hover, button.btn2:hover {
-    background-color: #2e353284 !important; 
+    background-color: #2e353279 !important; 
     border: none;
 }
 
@@ -51,4 +56,17 @@ button{
     color: red;
     margin-top: 10px;
     font-size: 14px;
+}
+
+.contenedor-input{
+    margin: 35px 10px 25px 10px;
+}
+
+.contenedor-form{
+    width: 400px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 45px;
+    border-radius: 5px;
+    margin-right: 15px;
 }

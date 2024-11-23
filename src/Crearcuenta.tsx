@@ -109,7 +109,7 @@ const Crearcuenta: React.FC = () => {
     return (
         <div className="contenedor-principal">
             <h2>Crear Cuenta</h2>
-            <form className="contenedor-login" onSubmit={handleSubmit}>
+            <form className="contenedor-form" onSubmit={handleSubmit}>
                 {/* Campo de Usuario */}
                 <div className="input-group mb-3">
                     <input

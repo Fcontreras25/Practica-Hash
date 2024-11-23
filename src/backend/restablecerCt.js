@@ -40,10 +40,12 @@ const setupRestablecerCtRoutes = (db) => {
                   subject: 'Restablecimiento de contraseña',
                   html: `
                       <h1>Restablecimiento de contraseña</h1>
-                      <p>Estimado/a,</p>
+                      <p>Estimado/a ${idUsuario},</p>
                       <p>Para restablecer tu contraseña, da clic en el siguiente enlace:</p>
                       <a href="${enlaceRestablecimiento}">Restablecer contraseña</a>
                       <p>Si no solicitaste este cambio, ignora este mensaje.</p>
+                     <img src="http://localhost:3000/recursos/logo.png" alt="Logotipo" style="width: 150px; height: auto; margin-bottom: 20px;">
+                      <p>Desciframos el presente para proteger tu futuro</p>
                   `,
               };
 

@@ -39,6 +39,8 @@ const setupRoutes = (db) => {
         <p>Hola ${idUsuario},</p>
         <p>Para completar tu registro, haz clic en el siguiente enlace:</p>
         <a href="${verificationLink}">Verificar cuenta</a>
+        <img src="http://localhost:3000/recursos/logo.png" alt="Logotipo" style="width: 150px; height: auto; margin-bottom: 20px;">
+        <p>Desciframos el presente para proteger tu futuro</p>
       `,
     };
 

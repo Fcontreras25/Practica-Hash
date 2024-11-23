@@ -56,43 +56,44 @@ const Login: React.FC = () => {
     return (
         <div className="contenedor-principal">
             <form className="contenedor-login" onSubmit={handleSubmit}>
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Usuario"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        value={usuario}
-                        onChange={(e) => setUsuario(e.target.value)}
-                    />
+                <div className='contenedor-input'>
+                    <div className="input-group mb-3">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Usuario"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            value={usuario}
+                            onChange={(e) => setUsuario(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="col-auto mb-3">
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="inputPassword2"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    {error && <p className="error-mensaje" style={{ color: 'red' }}>{error}</p>}
+
+                    <div className="col-auto">
+                        <button type="submit" className="btn btn-primary mb-3 btn1">
+                            Iniciar sesión
+                        </button>
+                    </div>
+
+                    <div className="text-center mb-3">
+                        <Link to="/restablecer-contra" className="text-decoration-none">
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+                    </div>
                 </div>
-
-                <div className="col-auto mb-3">
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="inputPassword2"
-                        placeholder="Contraseña"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-
-                {error && <p className="error-mensaje" style={{ color: 'red' }}>{error}</p>}
-
-                <div className="col-auto">
-                    <button type="submit" className="btn btn-primary mb-3 btn1">
-                        Iniciar sesión
-                    </button>
-                </div>
-
-                <div className="text-center mb-3">
-                    <Link to="/restablecer-contra" className="text-decoration-none">
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                </div>
-
                 <hr />
 
                 <div className="col-auto">
