@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 const Nuevacontra: React.FC = () => {
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [nuevaContra, setNewPassword] = useState('');
+    const [confirmarContra, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -17,21 +17,21 @@ const Nuevacontra: React.FC = () => {
         e.preventDefault();
 
         // Validación básica antes de enviar al backend
-        if (newPassword !== confirmPassword) {
+        if (nuevaContra !== confirmarContra) {
             setError('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
             return;
         }
 
         try {
-            const response = await fetch('http://localhost:3000/guardarNuevaContraseña', {
+            const response = await fetch('http://localhost:3000/guardarNuevaContra', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     idUsuario: 1, // Cambia este valor según sea necesario (puede venir del token en la URL)
-                    nuevaContraseña: newPassword,
-                    confirmarContraseña: confirmPassword,
+                    nuevaContra: nuevaContra,
+                    confirmarContra: confirmarContra,
                 }),
             });
 
@@ -72,7 +72,7 @@ const Nuevacontra: React.FC = () => {
                             className="form-control"
                             id="newPassword"
                             placeholder="Nueva Contraseña*"
-                            value={newPassword}
+                            value={nuevaContra}
                             onChange={(e) => setNewPassword(e.target.value)}
                         />
                     </div>
@@ -84,7 +84,7 @@ const Nuevacontra: React.FC = () => {
                             className="form-control"
                             id="confirmPassword"
                             placeholder="Confirmar Contraseña*"
-                            value={confirmPassword}
+                            value={confirmarContra}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>

@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mysql from 'mysql';
+import crypto from 'crypto';
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,7 +30,7 @@ const validarContraseña = (password) => {
 };
 
 // Ruta para almacenar la nueva contraseña
-app.post('/guardarNuevaContraseña', (req, res) => {
+app.post('/guardarNuevaContra', (req, res) => {
     const { idUsuario, nuevaContraseña, confirmarContraseña } = req.body;
 
     // Verificar que las contraseñas coincidan
