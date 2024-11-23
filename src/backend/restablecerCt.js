@@ -30,7 +30,7 @@ const setupRestablecerCtRoutes = (db) => {
           
           // Generar un código especial o token único para el enlace
           const codigoEspecial = crypto.randomBytes(4).toString('hex');
-          const enlaceRestablecimiento = `https://tu-sitio.com/restablecer?token=${codigoEspecial}`;
+          const enlaceRestablecimiento = `http://localhost:5173/nueva-contra`;
   
           // Configuración del transporte de correo
           const transporter = nodemailer.createTransport({
