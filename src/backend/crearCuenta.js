@@ -21,6 +21,11 @@ const setupRoutes = (db) => {
   router.post('/api/form', (req, res) => {
     const { idUsuario, correo, contra } = req.body;
 
+    // Validar que la contraseña ya esté hasheada
+    if (!/^[a-f0-9]{64}$/.test(contra)) { // SHA-256 produce un hash de 64 caracteres en hexadecimal
+      return res.status(400).send('Formato de hash inválido.');
+    }
+
     const token = crypto.randomBytes(32).toString('hex');
 
     pendingUsers.set(token, { idUsuario, correo, contra });

@@ -1,5 +1,6 @@
 import './index.css';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
     idUsuario: string;
@@ -12,6 +13,17 @@ const Crearcuenta: React.FC = () => {
     const [confirmContra, setConfirmContra] = useState<string>(''); // Estado para confirmar contraseña
     const [error, setError] = useState<string>(''); // Estado para manejar errores
     const [successMessage, setSuccessMessage] = useState<string>(''); // Estado para manejar mensajes de éxito
+    const navigate = useNavigate(); // Para redirigir al usuario
+
+    // Función para hashear la contraseña usando SHA-256
+    const hashPassword = async (password: string): Promise<string> => {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(hash))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('');
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -55,13 +67,21 @@ const Crearcuenta: React.FC = () => {
         setError('');
 
         try {
+            // Hashear la contraseña antes de enviarla al servidor
+            const hashedContra = await hashPassword(formData.contra);
+
+            // Enviar los datos con la contraseña hasheada al servidor
             const response = await fetch('http://localhost:3000/api/form', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    contra: hashedContra, // Contraseña hasheada
+                }),
             });
+
             if (response.ok) {
                 // Mensaje de éxito cuando se envía el correo de verificación
                 setSuccessMessage(
@@ -70,6 +90,11 @@ const Crearcuenta: React.FC = () => {
                 setError('');
                 setFormData({ idUsuario: '', correo: '', contra: '' });
                 setConfirmContra('');
+
+                // Redirigir al login después de 3 segundos
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000);
             } else {
                 const errorMsg = await response.text();
                 setError(`Error del servidor: ${errorMsg}`);
@@ -83,6 +108,7 @@ const Crearcuenta: React.FC = () => {
 
     return (
         <div className="contenedor-principal">
+            <h2>Crear Cuenta</h2>
             <form className="contenedor-login" onSubmit={handleSubmit}>
                 {/* Campo de Usuario */}
                 <div className="input-group mb-3">
@@ -145,7 +171,7 @@ const Crearcuenta: React.FC = () => {
                 {/* Botón de Envío */}
                 <div className="col-auto">
                     <button type="submit" className="btn btn-primary mb-3 btn1">
-                        Crear cuenta
+                        Crear
                     </button>
                 </div>
             </form>

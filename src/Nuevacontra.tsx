@@ -23,6 +23,16 @@ const Nuevacontra: React.FC = () => {
         }
     }, [location]);
 
+    // Función para hashear la contraseña usando SHA-256
+    const hashPassword = async (password: string): Promise<string> => {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(hash))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('');
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -37,15 +47,17 @@ const Nuevacontra: React.FC = () => {
         }
 
         try {
+            // Hashear la contraseña antes de enviarla al servidor
+            const hashedPassword = await hashPassword(nuevaContra);
+
             const response = await fetch('http://localhost:3000/guardarNuevaContra', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario,
-                    nuevaContraseña: nuevaContra,
-                    confirmarContraseña: confirmarContra,
+                    idUsuario, // Asegúrate de enviar un string no vacío
+                    nuevaContraseña: hashedPassword, // Contraseña hasheada en SHA-256
                 }),
             });
 
@@ -56,7 +68,7 @@ const Nuevacontra: React.FC = () => {
             } else {
                 setSuccess(data.mensaje || '¡Contraseña actualizada con éxito!');
                 setTimeout(() => {
-                    navigate('/'); 
+                    navigate('/'); // Redirigir al login
                 }, 2000);
             }
         } catch (err) {

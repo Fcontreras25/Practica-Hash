@@ -4,35 +4,23 @@ import crypto from 'crypto';
 const router = express.Router();
 
 const setupNuevaContraRoutes = (db) => {
-    const validarContraseña = (password) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return regex.test(password);
-    };
-
     router.post('/guardarNuevaContra', (req, res) => {
-        console.log('Datos recibidos:', req.body); // Para depurar
+        console.log('Datos recibidos:', req.body);
 
-        const { idUsuario, nuevaContraseña: nuevaContra, confirmarContraseña: confirmarContra } = req.body;
+        const { idUsuario, nuevaContraseña: hashedPassword } = req.body;
 
-        // Confirmar que idUsuario es un string
-        console.log('ID Usuario recibido como:', typeof idUsuario, idUsuario);
-
+        // Validar que idUsuario sea un string no vacío
         if (typeof idUsuario !== 'string' || !idUsuario.trim()) {
+            console.error('ID Usuario inválido:', idUsuario);
             return res.status(400).json({ error: 'ID Usuario inválido o no proporcionado.' });
         }
 
-        if (nuevaContra !== confirmarContra) {
-            return res.status(400).json({ error: 'Las contraseñas no coinciden. Intenta de nuevo.' });
+        // Validar que la contraseña ya esté en formato hash
+        if (!/^[a-f0-9]{64}$/.test(hashedPassword)) {
+            console.error('Formato de hash inválido:', hashedPassword);
+            return res.status(400).json({ error: 'Formato de hash inválido.' });
         }
 
-        if (!validarContraseña(nuevaContra)) {
-            return res.status(400).json({
-                error:
-                    'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula, un número y un símbolo.',
-            });
-        }
-
-        const hashedPassword = crypto.createHash('sha256').update(nuevaContra).digest('hex');
         const query = 'UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?';
 
         db.query(query, [hashedPassword, idUsuario], (err, result) => {
@@ -42,6 +30,7 @@ const setupNuevaContraRoutes = (db) => {
             }
 
             if (result.affectedRows === 0) {
+                console.error('Usuario no encontrado:', idUsuario);
                 return res.status(404).json({ error: 'Usuario no encontrado.' });
             }
 
