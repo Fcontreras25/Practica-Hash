@@ -6,13 +6,18 @@ const Bienvenida: React.FC = () => {
 
     return (
         <div className="contenedor-bienvenida">
-            <h1>¡Bienvenido, {usuario}!</h1>
-            <p>Estamos felices de verte nuevamente.</p>
-            <p>Estamos son los datos nuevos de esta semana.</p>
-            <div className='contenedor-datos'>
-                <a>dato 1</a>
-                <a>dato 3</a>
-                <a>dato 2</a>
+            <div className='contenedor-info'>
+                <h3>¡Bienvenido, {usuario}!</h3>
+                <p>Estamos felices de verte nuevamente.</p>
+                <p>Estamos son los datos nuevos de esta semana.</p>
+                <div className="contenedor-datos">
+                    <ul>
+                        <li><a href="#">dato 1</a></li>
+                        <li><a href="#">dato 3</a></li>
+                        <li><a href="#">dato 2</a></li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     );

@@ -4,7 +4,7 @@
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
     min-height: 100vh; /* Ocupa toda la pantalla */
-    background-color: #f8f9fa; /* Fondo opcional */
+    background-color: #f8f9fa; 
     padding: 20px;
 }
 
@@ -15,8 +15,8 @@
     border-radius: 10px; /* Bordes redondeados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
     width: 100%;
-    max-width: 500px; /* Limita el ancho máximo */
-    text-align: center; /* Centra texto y campos */
+    max-width: 500px; 
+    text-align: center; 
 }
 
 /* Título del formulario */
@@ -54,7 +54,7 @@
 }
 
 .botones .btn {
-    width: 48%; /* Ancho de los botones */
+    width: 48%; 
     padding: 10px;
     border: none;
     border-radius: 5px;
