@@ -1,22 +1,36 @@
 import './nuevaContra.css';
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Nuevacontra: React.FC = () => {
     const [nuevaContra, setNewPassword] = useState('');
     const [confirmarContra, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [idUsuario, setIdUsuario] = useState<string | null>(null);
 
     const navigate = useNavigate();
-    const navegarLogin = () => {
-        navigate("/");
-    };
+    const location = useLocation();
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const id = queryParams.get('idUsuario');
+
+        if (id) {
+            setIdUsuario(id);
+        } else {
+            setError('No se proporcionó un usuario válido.');
+        }
+    }, [location]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validación básica antes de enviar al backend
+        if (!idUsuario) {
+            setError('No se puede restablecer la contraseña sin un usuario válido.');
+            return;
+        }
+
         if (nuevaContra !== confirmarContra) {
             setError('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
             return;
@@ -29,9 +43,9 @@ const Nuevacontra: React.FC = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario: 1, // Cambia este valor según sea necesario (puede venir del token en la URL)
-                    nuevaContra: nuevaContra,
-                    confirmarContra: confirmarContra,
+                    idUsuario,
+                    nuevaContraseña: nuevaContra,
+                    confirmarContraseña: confirmarContra,
                 }),
             });
 
@@ -41,7 +55,9 @@ const Nuevacontra: React.FC = () => {
                 setError(data.error || 'Error al restablecer la contraseña. Intenta más tarde.');
             } else {
                 setSuccess(data.mensaje || '¡Contraseña actualizada con éxito!');
-                setError(''); // Limpia errores previos
+                setTimeout(() => {
+                    navigate('/'); 
+                }, 2000);
             }
         } catch (err) {
             console.error(err);
@@ -58,14 +74,10 @@ const Nuevacontra: React.FC = () => {
                     una letra mayúscula, una minúscula, un número y un símbolo.
                 </p>
 
-                {/* Muestra el mensaje de error */}
                 {error && <div className="error-mensaje">{error}</div>}
-                {/* Muestra el mensaje de éxito */}
                 {success && <div className="exito-mensaje">{success}</div>}
 
-                {/* Formulario */}
                 <form onSubmit={handleSubmit}>
-                    {/* Campo de Nueva Contraseña */}
                     <div className="campo">
                         <input
                             type="password"
@@ -76,8 +88,6 @@ const Nuevacontra: React.FC = () => {
                             onChange={(e) => setNewPassword(e.target.value)}
                         />
                     </div>
-
-                    {/* Campo de Confirmar Contraseña */}
                     <div className="campo">
                         <input
                             type="password"
@@ -88,10 +98,8 @@ const Nuevacontra: React.FC = () => {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>
-
-                    {/* Botones */}
                     <div className="botones">
-                        <button type="button" className="btn btn-cancelar" onClick={navegarLogin}>
+                        <button type="button" className="btn btn-cancelar" onClick={() => navigate("/")}>
                             Cancelar
                         </button>
                         <button type="submit" className="btn btn-aceptar">

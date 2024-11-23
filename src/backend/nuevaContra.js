@@ -1,68 +1,55 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import mysql from 'mysql';
 import crypto from 'crypto';
 
+const router = express.Router();
 
-const app = express();
-app.use(bodyParser.json());
+const setupNuevaContraRoutes = (db) => {
+    const validarContraseña = (password) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(password);
+    };
 
-// Configuración de la conexión a la base de datos
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'usuario',
-    database: 'login', 
-});
+    router.post('/guardarNuevaContra', (req, res) => {
+        console.log('Datos recibidos:', req.body); // Para depurar
 
-db.connect(err => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err);
-    } else {
-        console.log('Conectado a la base de datos');
-    }
-});
+        const { idUsuario, nuevaContraseña: nuevaContra, confirmarContraseña: confirmarContra } = req.body;
 
-// Función para validar la contraseña
-const validarContraseña = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return regex.test(password);
-};
+        // Confirmar que idUsuario es un string
+        console.log('ID Usuario recibido como:', typeof idUsuario, idUsuario);
 
-// Ruta para almacenar la nueva contraseña
-app.post('/guardarNuevaContra', (req, res) => {
-    const { idUsuario, nuevaContraseña, confirmarContraseña } = req.body;
-
-    // Verificar que las contraseñas coincidan
-    if (nuevaContraseña !== confirmarContraseña) {
-        return res.status(400).json({ error: 'Las contraseñas no coinciden. Intenta de nuevo.' });
-    }
-
-    // Validar el formato de la contraseña
-    if (!validarContraseña(nuevaContraseña)) {
-        return res.status(400).json({
-            error:
-                'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula, un número y un símbolo.',
-        });
-    }
-
-    // Encriptar la contraseña antes de almacenarla (opcional, pero recomendado)
-    const hashedPassword = crypto.createHash('sha256').update(nuevaContraseña).digest('hex');
-
-    // Actualizar la contraseña en la base de datos
-    const query = 'UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?';
-    db.query(query, [hashedPassword, idUsuario], (err, result) => {
-        if (err) {
-            console.error('Error al actualizar la contraseña:', err);
-            return res.status(500).json({ error: 'Error interno del servidor' });
+        if (typeof idUsuario !== 'string' || !idUsuario.trim()) {
+            return res.status(400).json({ error: 'ID Usuario inválido o no proporcionado.' });
         }
 
-        return res.status(200).json({ mensaje: 'Contraseña actualizada correctamente' });
-    });
-});
+        if (nuevaContra !== confirmarContra) {
+            return res.status(400).json({ error: 'Las contraseñas no coinciden. Intenta de nuevo.' });
+        }
 
-// Servidor en puerto 3000
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
-});
+        if (!validarContraseña(nuevaContra)) {
+            return res.status(400).json({
+                error:
+                    'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula, un número y un símbolo.',
+            });
+        }
+
+        const hashedPassword = crypto.createHash('sha256').update(nuevaContra).digest('hex');
+        const query = 'UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?';
+
+        db.query(query, [hashedPassword, idUsuario], (err, result) => {
+            if (err) {
+                console.error('Error al actualizar la contraseña:', err);
+                return res.status(500).json({ error: 'Error interno del servidor' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Usuario no encontrado.' });
+            }
+
+            return res.status(200).json({ mensaje: 'Contraseña actualizada correctamente' });
+        });
+    });
+
+    return router;
+};
+
+export default setupNuevaContraRoutes;
