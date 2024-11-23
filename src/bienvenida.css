@@ -1,0 +1,11 @@
+.contenedor-bienvenida{
+    width: 500px;
+    background-color: antiquewhite;
+    align-items: center;
+    margin: center;
+}
+
+.contenedor-datos{
+    background-color: aliceblue;
+    margin: 15px;
+}

@@ -6,6 +6,7 @@ import mysql from 'mysql2';
 import setupCrearCuentaRoutes from './crearCuenta.js';
 import setupRestablecerCtRoutes from './restablecerCt.js';
 import setupNuevaContraRoutes from './nuevaContra.js';
+import setupLoginRoutes from './login.js';
 
 const app = express();
 const PORT = 3000;
@@ -29,6 +30,7 @@ db.connect((err) => {
 });
 
 // Configurar rutas con db
+app.use(setupLoginRoutes(db));
 app.use(setupCrearCuentaRoutes(db));
 app.use(setupRestablecerCtRoutes(db));
 app.use(setupNuevaContraRoutes(db));
