@@ -1,0 +1,80 @@
+/* Estilo general del contenedor principal */
+.contenedor-principal {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    min-height: 100vh; /* Ocupa toda la pantalla */
+    background-color: #f8f9fa; /* Fondo opcional */
+    padding: 20px;
+}
+
+/* Contenedor interno con sombra y borde redondeado */
+.contenedor-nuevacontra {
+    background-color: white; /* Fondo blanco */
+    padding: 30px;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    width: 100%;
+    max-width: 500px; /* Limita el ancho máximo */
+    text-align: center; /* Centra texto y campos */
+}
+
+/* Título del formulario */
+.contenedor-nuevacontra h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Texto descriptivo */
+.contenedor-nuevacontra p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Estilo para los campos de entrada */
+.campo {
+    margin-bottom: 15px;
+}
+
+.campo input.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Estilo para los botones */
+.botones {
+    display: flex;
+    justify-content: space-between; /* Separa los botones */
+    gap: 10px;
+}
+
+.botones .btn {
+    width: 48%; /* Ancho de los botones */
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Botón de cancelar */
+.btn-cancelar {
+    background-color: #d8ddde !important;  /* Color original */
+    color: white;
+}
+
+/* Botón de aceptar */
+.btn-aceptar {
+    background-color: #474a48 !important;  /* Color original */
+    color: white !important;
+}
+
+.btn-cancelar:hover, .btn-aceptar:hover {
+    background-color: #cfcbca !important;  /* Color original */
+    color: rgb(0, 0, 0) !important;
+}

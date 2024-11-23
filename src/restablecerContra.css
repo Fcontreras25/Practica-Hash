@@ -1,0 +1,65 @@
+/* Centrar el contenedor principal */
+.contenedor-principal {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh; 
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* Estilo del contenedor del formulario */
+.contenedor-restablecer {
+    background-color: white; 
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+/* Texto descriptivo */
+.contenedor-restablecer h4 {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilo para el campo de entrada */
+.input-group .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Botones */
+.botones {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.botones .btn {
+    width: 48%; 
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Botón de cancelar */
+.btn-cancelar {
+    background-color: #cfcbca; 
+    color: rgb(18, 18, 18);
+}
+
+/* Botón de aceptar */
+.btn-aceptar {
+    background-color: #712613; 
+    color: white;
+}
