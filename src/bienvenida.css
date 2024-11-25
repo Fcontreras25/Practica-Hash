@@ -1,15 +1,80 @@
-.contenedor-info {
-    width: 500px;
-    background-color: antiquewhite;
-    position: absolute;
-    top: 20px;
-    left: 20px;
+/* Contenedor principal */
+.contenedor-bienvenida {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+    background-color: #f8f9fa; /* Color de fondo ligero */
     padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
 }
 
+/* Caja principal */
+.contenedor-info {
+    max-width: 600px; /* Ancho máximo */
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 30px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-align: center; /* Centrar el texto */
+}
+
+/* Título principal */
+.contenedor-info h3 {
+    font-size: 1.8rem;
+    color: #333333;
+    margin-bottom: 10px;
+}
+
+/* Texto descriptivo */
+.contenedor-info p {
+    font-size: 1rem;
+    color: #666666;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de los datos */
 .contenedor-datos {
-    background-color: aliceblue;
-    padding: 10px;
+    background-color: #f0f9ff; /* Azul claro */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #d1e7ff; /* Borde azul */
+}
+
+/* Lista de datos */
+.contenedor-datos ul {
+    list-style: none; /* Sin viñetas */
+    padding: 0;
+    margin: 0;
+}
+
+.contenedor-datos ul li {
+    margin: 10px 0; /* Espaciado entre elementos */
+    font-size: 1rem;
+}
+
+.contenedor-datos ul li a {
+    color: #007bff; /* Azul */
+    text-decoration: none; /* Sin subrayado */
+    transition: color 0.2s ease; /* Transición al hover */
+}
+
+.contenedor-datos ul li a:hover {
+    color: #0056b3; /* Azul oscuro */
+}
+
+/* Botón cerrar sesión */
+.boton-salir {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #dc3545; /* Rojo */
+    color: #ffffff; /* Texto blanco */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.boton-salir:hover {
+    background-color: #c82333; /* Rojo más oscuro */
 }

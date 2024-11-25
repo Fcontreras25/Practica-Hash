@@ -39,7 +39,6 @@ const Crearcuenta: React.FC = () => {
     };
 
     const validatePassword = (password: string) => {
-        // Expresión regular para la validación
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return passwordRegex.test(password);
     };
@@ -47,7 +46,6 @@ const Crearcuenta: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validar que la contraseña cumpla con los requisitos
         if (!validatePassword(formData.contra)) {
             setError(
                 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.'
@@ -56,21 +54,17 @@ const Crearcuenta: React.FC = () => {
             return;
         }
 
-        // Validar si las contraseñas coinciden
         if (formData.contra !== confirmContra) {
             setError('Las contraseñas no coinciden.');
             setSuccessMessage('');
             return;
         }
 
-        // Si todo está correcto, eliminar el mensaje de error
         setError('');
 
         try {
-            // Hashear la contraseña antes de enviarla al servidor
             const hashedContra = await hashPassword(formData.contra);
 
-            // Enviar los datos con la contraseña hasheada al servidor
             const response = await fetch('http://localhost:3000/api/form', {
                 method: 'POST',
                 headers: {
@@ -78,12 +72,11 @@ const Crearcuenta: React.FC = () => {
                 },
                 body: JSON.stringify({
                     ...formData,
-                    contra: hashedContra, // Contraseña hasheada
+                    contra: hashedContra,
                 }),
             });
 
             if (response.ok) {
-                // Mensaje de éxito cuando se envía el correo de verificación
                 setSuccessMessage(
                     'Correo de verificación enviado. Revisa tu correo para verificar tu cuenta antes de iniciar sesión.'
                 );
@@ -91,7 +84,6 @@ const Crearcuenta: React.FC = () => {
                 setFormData({ idUsuario: '', correo: '', contra: '' });
                 setConfirmContra('');
 
-                // Redirigir al login después de 3 segundos
                 setTimeout(() => {
                     navigate('/');
                 }, 3000);
@@ -104,6 +96,10 @@ const Crearcuenta: React.FC = () => {
             setError('Hubo un error de conexión. Intenta nuevamente.');
             setSuccessMessage('');
         }
+    };
+
+    const handleBackToLogin = () => {
+        navigate('/'); // Navega al login
     };
 
     return (
@@ -172,10 +168,17 @@ const Crearcuenta: React.FC = () => {
                 {/* Mostrar mensaje de éxito */}
                 {successMessage && <p className="success-message" style={{ color: 'green' }}>{successMessage}</p>}
 
-                {/* Botón de Envío */}
-                <div className="col-auto">
+                {/* Botones */}
+                <div className="col-auto d-flex justify-content-between">
                     <button type="submit" className="btn btn-primary mb-3 btn1">
                         Crear
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-secondary mb-3 btn1"
+                        onClick={handleBackToLogin}
+                    >
+                        Volver al Login
                     </button>
                 </div>
             </form>

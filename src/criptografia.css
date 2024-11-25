@@ -1,0 +1,78 @@
+/* Contenedor principal */
+.contenedor-criptografia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    min-height: 100vh;
+    background-color: #f8f9fa; /* Fondo suave */
+}
+
+/* Título principal */
+.contenedor-criptografia h2 {
+    font-size: 2rem;
+    color: #333333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Texto descriptivo */
+.contenedor-criptografia p {
+    font-size: 1.2rem;
+    color: #555555;
+    margin-bottom: 30px;
+    max-width: 700px; /* Limitar el ancho del texto */
+    text-align: justify; /* Justificar el texto */
+}
+
+.imagen-criptografia {
+    display: block; /* Para que se comporte como un bloque */
+    margin: 20px auto; /* Centra horizontalmente y agrega espaciado */
+    max-width: 100%; /* Asegura que no se desborde */
+    height: auto; /* Mantiene la proporción */
+    width: 200px; /* Ajusta el ancho */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+}
+
+
+/* Botones */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre los botones */
+    margin-top: 20px;
+}
+
+.btn-pdf, .btn-regresar {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Botón de Generar PDF */
+.btn-pdf {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+.btn-pdf:hover {
+    background-color: #0056b3; /* Azul oscuro */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+/* Botón de Regresar */
+.btn-regresar {
+    background-color: #6c757d; /* Gris */
+    color: white;
+}
+
+.btn-regresar:hover {
+    background-color: #5a6268; /* Gris más oscuro */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
