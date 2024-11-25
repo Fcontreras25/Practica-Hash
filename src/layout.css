@@ -10,7 +10,7 @@
     display: flex;
     justify-content: space-between; /* Espacio entre logo y botón */
     align-items: center; /* Centra verticalmente */
-    background-color: #007bff; /* Azul */
+    background-color: #000000; /* Azul */
     color: white;
     padding: 10px 20px;
 }
@@ -47,7 +47,7 @@
 
 /* Footer */
 .footer {
-    background-color: #333;
+    background-color: #000;
     color: white;
     text-align: center;
     padding: 10px 0;
