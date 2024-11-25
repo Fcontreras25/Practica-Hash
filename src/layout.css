@@ -8,22 +8,26 @@
 /* Header */
 .header {
     display: flex;
-    justify-content: space-between; /* Espacio entre logo y botón */
+    justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
     background-color: #000000; /* Azul */
-    color: white;
     padding: 10px 20px;
+    position: relative; /* Necesario para posicionar el botón */
 }
 
-/* Logotipo */
+/* Logotipo del Header */
 .logo-header {
-    height: 50px; /* Altura estándar para el logo */
+    height: 50px; /* Ajusta el tamaño del logo */
     object-fit: contain; /* Mantiene la proporción */
-    margin: 0 auto; /* Centra horizontalmente dentro del header */
+    margin: 0; /* Elimina cualquier margen adicional */
 }
 
 /* Botón de cerrar sesión */
 .btn-cerrar-sesion {
+    position: absolute; /* Permite colocarlo independiente del flujo */
+    right: 20px; /* Alineado al lado derecho */
+    top: 50%; /* Centrado verticalmente */
+    transform: translateY(-50%); /* Ajuste para el centro exacto */
     background-color: #dc3545; /* Rojo */
     color: white;
     padding: 10px 20px;
@@ -52,4 +56,11 @@
     text-align: center;
     padding: 10px 0;
     font-size: 0.9rem;
+}
+
+/* Logotipo del Footer */
+.logo-footer {
+    height: 40px; /* Altura estándar para el logo del footer */
+    margin-bottom: 10px; /* Espaciado entre el logo y el texto */
+    object-fit: contain; /* Mantiene la proporción */
 }

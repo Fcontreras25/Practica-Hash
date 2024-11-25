@@ -1,25 +1,44 @@
 import React, { useRef } from 'react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
 import './criptografia.css';
 
 const Criptografia2: React.FC = () => {
     const navigate = useNavigate();
-    const contentRef = useRef<HTMLDivElement>(null);
 
     const generarPDF = async () => {
-        if (contentRef.current) {
-            const canvas = await html2canvas(contentRef.current);
-            const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
 
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        // Dimensiones del PDF
+        const anchoPagina = pdf.internal.pageSize.getWidth();
+        const margenes = 15;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save('criptografia2.pdf');
-        }
+        // Agregar título centrado y en negritas
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(20);
+        pdf.text("Criptografía - Métodos Clásicos", anchoPagina / 2, 20, { align: "center" });
+
+        // Agregar texto justificado debajo del título
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(12);
+        const texto = "Los métodos clásicos de criptografía, como el cifrado César y el cifrado de Vigenère, fueron utilizados durante siglos para proteger mensajes. Aunque hoy en día son inseguros, sentaron las bases para los métodos modernos.";
+        pdf.text(texto, margenes, 40, {
+            maxWidth: anchoPagina - 2 * margenes,
+            align: "justify",
+        });
+
+        // Agregar imagen centrada debajo del texto
+        const imgSrc = "src/backend/recursos/logo.png"; // Ruta de la imagen
+        const img = new Image();
+        img.src = imgSrc;
+        img.onload = () => {
+            const imgWidth = 50;
+            const imgHeight = 50;
+            const x = (anchoPagina - imgWidth) / 2;
+            const y = 60;
+            pdf.addImage(img, 'PNG', x, y, imgWidth, imgHeight);
+            pdf.save("criptografia2.pdf");
+        };
     };
 
     const regresar = () => {
@@ -28,12 +47,12 @@ const Criptografia2: React.FC = () => {
 
     return (
         <div className="contenedor-criptografia">
-            <div ref={contentRef} className="contenido-pdf">
+            <div className="contenido-pdf">
                 <h2>Criptografía - Métodos Clásicos</h2>
                 <p>
-                    Métodos como el cifrado César y el de Vigenère son ejemplos históricos de cómo se protegía la información antes de la era digital.
+                    Los métodos clásicos de criptografía, como el cifrado César y el cifrado de Vigenère, fueron utilizados durante siglos para proteger mensajes. Aunque hoy en día son inseguros, sentaron las bases para los métodos modernos.
                 </p>
-                <img src="ruta_a_tu_imagen2.jpg" alt="Métodos clásicos de criptografía" className="imagen-criptografia" />
+                <img src="src/backend/recursos/logo.png" alt="Métodos Clásicos de Criptografía" className="imagen-criptografia" />
             </div>
             <div className="botones">
                 <button className="btn-pdf" onClick={generarPDF}>

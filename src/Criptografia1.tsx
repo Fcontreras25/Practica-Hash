@@ -5,29 +5,39 @@ import './criptografia.css';
 
 const Criptografia1: React.FC = () => {
     const navigate = useNavigate();
-    const contentRef = useRef<HTMLDivElement>(null); // Referencia al contenido
 
     const generarPDF = async () => {
         const pdf = new jsPDF();
-        const imgSrc = "src/backend/recursos/logo.png"; // Ruta de la imagen
 
-        // Agregar texto
-        pdf.setFontSize(16);
-        pdf.text("Criptografía - Introducción", 10, 10);
+        // Dimensiones del PDF
+        const anchoPagina = pdf.internal.pageSize.getWidth();
+        const margenes = 15;
+
+        // Agregar título centrado y en negritas
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(20);
+        pdf.text("Criptografía - Introducción", anchoPagina / 2, 20, { align: "center" });
+
+        // Agregar texto centrado debajo del título
+        pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(12);
-        pdf.text(
-            "La criptografía asegura la privacidad de las comunicaciones a través del uso de métodos matemáticos complejos. Es fundamental en la seguridad informática actual.",
-            10,
-            30,
-            { maxWidth: 180 } // Ajusta el texto al ancho de la página
-        );
+        const texto = "La criptografía asegura la privacidad de las comunicaciones a través del uso de métodos matemáticos complejos. Es fundamental en la seguridad informática actual.";
+        pdf.text(texto, margenes, 40, {
+            maxWidth: anchoPagina - 2 * margenes, // Ajustar el texto a los márgenes
+            align: "justify", // Justificar el texto
+        });
 
-        // Agregar la imagen
+        // Agregar imagen centrada debajo del texto
+        const imgSrc = "src/backend/recursos/logo.png"; // Ruta de la imagen
         const img = new Image();
         img.src = imgSrc;
         img.onload = () => {
-            pdf.addImage(img, 'JPEG', 10, 50, 50, 50); // Posición x, y y tamaño de la imagen
-            pdf.save("criptografia1.pdf"); // Descargar el PDF
+            const imgWidth = 50; // Ancho de la imagen
+            const imgHeight = 50; // Alto de la imagen
+            const x = (anchoPagina - imgWidth) / 2; // Posición X centrada
+            const y = 60; // Ajustar la posición Y debajo del texto
+            pdf.addImage(img, 'PNG', x, y, imgWidth, imgHeight); // Agregar imagen
+            pdf.save("criptografia1.pdf"); // Descargar PDF
         };
     };
 
@@ -37,7 +47,7 @@ const Criptografia1: React.FC = () => {
 
     return (
         <div className="contenedor-criptografia">
-            <div ref={contentRef} className="contenido-pdf">
+            <div className="contenido-pdf">
                 <h2>Criptografía - Introducción</h2>
                 <p>
                     La criptografía asegura la privacidad de las comunicaciones a través del uso de métodos matemáticos complejos. Es fundamental en la seguridad informática actual.

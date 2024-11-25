@@ -38,6 +38,11 @@ const Layout: React.FC = () => {
 
             {/* Footer */}
             <footer className="footer">
+                <img
+                    src="src/backend/recursos/logo.png" // Ruta al logo del footer
+                    alt="Logotipo del Footer"
+                    className="logo-footer"
+                />
                 <p>© 2024 Mi Aplicación. Todos los derechos reservados.</p>
             </footer>
         </div>
