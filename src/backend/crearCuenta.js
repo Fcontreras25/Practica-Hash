@@ -81,4 +81,4 @@ const setupRoutes = (db) => {
   return router;
 };
 
-export default setupRoutes;
+export default setupRoutes; 

@@ -2,60 +2,83 @@ import './index.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface FormData {
-    idUsuario: string;
-    correo: string;
-    contra: string;
-}
-
 const Crearcuenta: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({ idUsuario: '', correo: '', contra: '' });
-    const [confirmContra, setConfirmContra] = useState<string>(''); // Estado para confirmar contraseña
-    const [error, setError] = useState<string>(''); // Estado para manejar errores
-    const [successMessage, setSuccessMessage] = useState<string>(''); // Estado para manejar mensajes de éxito
-    const navigate = useNavigate(); // Para redirigir al usuario
+    const [idUsuario, setIdUsuario] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [contra, setContra] = useState('');
+    const [confirmContra, setConfirmContra] = useState('');
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(''); // Fortaleza de la contraseña
 
-    // Función para hashear la contraseña usando SHA-256
-    const hashPassword = async (password: string): Promise<string> => {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
-        const hash = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(hash))
+    const navigate = useNavigate();
+
+    // Función para verificar contraseñas vulneradas con Pwned Passwords
+    const isPasswordPwned = async (password: string): Promise<boolean> => {
+        const hashedPassword = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+        const hexHash = Array.from(new Uint8Array(hashedPassword))
             .map((b) => b.toString(16).padStart(2, '0'))
-            .join('');
+            .join('')
+            .toUpperCase();
+        const prefix = hexHash.substring(0, 5);
+        const suffix = hexHash.substring(5);
+
+        const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+        const text = await response.text();
+        return text.includes(suffix);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+    // Validar contraseñas predecibles
+    const isPredictablePassword = (password: string) => {
+        const predictablePatterns = ['123456', 'qwerty', 'password', 'abc123', '123123', '111111'];
+        return predictablePatterns.includes(password.toLowerCase());
     };
 
-    const handleConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setConfirmContra(value);
+    // Evaluar fortaleza de la contraseña
+    const evaluatePasswordStrength = (password: string) => {
+        const lengthScore = password.length >= 8 ? 1 : 0;
+        const hasUppercase = /[A-Z]/.test(password) ? 1 : 0;
+        const hasLowercase = /[a-z]/.test(password) ? 1 : 0;
+        const hasNumber = /\d/.test(password) ? 1 : 0;
+        const hasSymbol = /[@$!%*?&]/.test(password) ? 1 : 0;
+
+        const score = lengthScore + hasUppercase + hasLowercase + hasNumber + hasSymbol;
+
+        if (score <= 2) return 'Débil';
+        if (score === 3) return 'Media';
+        return 'Fuerte';
     };
 
-    const validatePassword = (password: string) => {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return passwordRegex.test(password);
+    const handlePasswordChange = (password: string) => {
+        setContra(password);
+        setPasswordStrength(evaluatePasswordStrength(password));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validatePassword(formData.contra)) {
-            setError(
-                'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.'
-            );
+        // Validaciones generales
+        if (contra !== confirmContra) {
+            setError('Las contraseñas no coinciden.');
             setSuccessMessage('');
             return;
         }
 
-        if (formData.contra !== confirmContra) {
-            setError('Las contraseñas no coinciden.');
+        if (isPredictablePassword(contra)) {
+            setError('La contraseña no puede ser una secuencia predecible, como "123456" o "qwerty".');
+            setSuccessMessage('');
+            return;
+        }
+
+        if (await isPasswordPwned(contra)) {
+            setError('La contraseña ha sido vulnerada anteriormente. Por favor, elige otra.');
+            setSuccessMessage('');
+            return;
+        }
+
+        // Validación de requisitos mínimos
+        if (contra.length < 8 || contra.length > 64) {
+            setError('La contraseña debe tener entre 8 y 64 caracteres.');
             setSuccessMessage('');
             return;
         }
@@ -63,7 +86,10 @@ const Crearcuenta: React.FC = () => {
         setError('');
 
         try {
-            const hashedContra = await hashPassword(formData.contra);
+            const hashedPassword = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(contra));
+            const hashedHexPassword = Array.from(new Uint8Array(hashedPassword))
+                .map((b) => b.toString(16).padStart(2, '0'))
+                .join('');
 
             const response = await fetch('http://localhost:3000/api/form', {
                 method: 'POST',
@@ -71,8 +97,9 @@ const Crearcuenta: React.FC = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...formData,
-                    contra: hashedContra,
+                    idUsuario,
+                    correo,
+                    contra: hashedHexPassword,
                 }),
             });
 
@@ -81,7 +108,9 @@ const Crearcuenta: React.FC = () => {
                     'Correo de verificación enviado. Revisa tu correo para verificar tu cuenta antes de iniciar sesión.'
                 );
                 setError('');
-                setFormData({ idUsuario: '', correo: '', contra: '' });
+                setIdUsuario('');
+                setCorreo('');
+                setContra('');
                 setConfirmContra('');
 
                 setTimeout(() => {
@@ -98,10 +127,6 @@ const Crearcuenta: React.FC = () => {
         }
     };
 
-    const handleBackToLogin = () => {
-        navigate('/'); // Navega al login
-    };
-
     return (
         <div className="contenedor-principal">
             <div className='alinear'>
@@ -110,65 +135,51 @@ const Crearcuenta: React.FC = () => {
                 <h6>Regístrate ahora y da el primer paso hacia un futuro más seguro.</h6>
             </div>
             <form className="contenedor-form" onSubmit={handleSubmit}>
-                {/* Campo de Usuario */}
                 <div className="input-group mb-3">
                     <input
                         type="text"
                         className="form-control"
                         placeholder="Usuario"
-                        name="idUsuario"
-                        value={formData.idUsuario}
-                        onChange={handleChange}
+                        value={idUsuario}
+                        onChange={(e) => setIdUsuario(e.target.value)}
                         required
                     />
                 </div>
-
-                {/* Campo de Correo */}
                 <div className="mb-3">
                     <input
                         type="email"
                         className="form-control"
-                        name="correo"
                         placeholder="nombre@ruta.com"
-                        value={formData.correo}
-                        onChange={handleChange}
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
                         required
                     />
                 </div>
-
-                {/* Campo de Contraseña */}
                 <div className="col-auto mb-3">
                     <input
                         type="password"
                         className="form-control"
-                        name="contra"
                         placeholder="Contraseña"
-                        value={formData.contra}
-                        onChange={handleChange}
+                        value={contra}
+                        onChange={(e) => handlePasswordChange(e.target.value)}
                         required
                     />
                 </div>
-
-                {/* Campo de Confirmar Contraseña */}
+                <div className="password-strength">
+                    <p>Fortaleza: {passwordStrength}</p>
+                </div>
                 <div className="col-auto mb-3">
                     <input
                         type="password"
                         className="form-control"
                         placeholder="Confirmar contraseña"
-                        name="contraValidar"
                         value={confirmContra}
-                        onChange={handleConfirmChange}
+                        onChange={(e) => setConfirmContra(e.target.value)}
                         required
                     />
                 </div>
-
-                {/* Mostrar error si las contraseñas no cumplen los requisitos */}
                 {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
-
-                {/* Mostrar mensaje de éxito */}
                 {successMessage && <p className="success-message" style={{ color: 'green' }}>{successMessage}</p>}
-
-                {/* Botones */}
                 <div className="col-auto d-flex justify-content-between">
                     <button type="submit" className="btn btn-primary mb-3 btn1">
                         Crear
@@ -176,7 +187,7 @@ const Crearcuenta: React.FC = () => {
                     <button
                         type="button"
                         className="btn btn-secondary mb-3 btn1"
-                        onClick={handleBackToLogin}
+                        onClick={() => navigate('/')}
                     >
                         Volver al Login
                     </button>
