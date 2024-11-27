@@ -14,9 +14,9 @@ const Bienvenida: React.FC = () => {
 
                 <div className="contenedor-datos">
                     <ul>
-                        <li><Link to="/criptografia1">dato 1</Link></li>
-                        <li><Link to="/criptografia2">dato 2</Link></li>
-                        <li><Link to="/criptografia3">dato 3</Link></li>
+                        <li><Link to="/criptografia1">Manuscrito Voynich</Link></li>
+                        <li><Link to="/criptografia2">IA de Google Gemini genera polémica.</Link></li>
+                        <li><Link to="/criptografia3">Los tres nuevos cifrados de IBM</Link></li>
                     </ul>
                 </div>
             </div>

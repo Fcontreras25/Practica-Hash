@@ -43,7 +43,7 @@ const Layout: React.FC = () => {
                     alt="Logotipo del Footer"
                     className="logo-footer"
                 />
-                <p>© 2024 Mi Aplicación. Todos los derechos reservados.</p>
+                <p>© 2024 CipherTech una división de Capsule Corp. Todos los derechos reservados.</p>
             </footer>
         </div>
     );

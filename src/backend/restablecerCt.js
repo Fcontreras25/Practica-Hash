@@ -44,7 +44,7 @@ const setupRestablecerCtRoutes = (db) => {
                       <p>Para restablecer tu contraseña, da clic en el siguiente enlace:</p>
                       <a href="${enlaceRestablecimiento}">Restablecer contraseña</a>
                       <p>Si no solicitaste este cambio, ignora este mensaje.</p>
-                     <img src="http://localhost:3000/recursos/logo.png" alt="Logotipo" style="width: 150px; height: auto; margin-bottom: 20px;">
+                     <img src="src/backend/recursos/logo.png" alt="Logotipo" style="width: 150px; height: auto; margin-bottom: 20px;">
                       <p>Desciframos el presente para proteger tu futuro</p>
                   `,
               };
