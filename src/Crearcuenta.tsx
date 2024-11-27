@@ -93,7 +93,7 @@ const Crearcuenta: React.FC = () => {
                 .map((b) => b.toString(16).padStart(2, '0'))
                 .join('');
 
-            const response = await fetch('http://localhost:3000/api/form', {
+            const response = await fetch('https://practica-hash.vercel.app/api/form', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

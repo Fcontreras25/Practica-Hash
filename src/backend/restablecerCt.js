@@ -19,7 +19,7 @@ const setupRestablecerCtRoutes = (db) => {
           const correo = results.rows[0].correo;
           const idUsuario = results.rows[0].id_usuario;
 
-          const enlaceRestablecimiento = `http://localhost:3000/nueva-contra?idUsuario=${idUsuario}`;
+          const enlaceRestablecimiento = `https://practica-hash.vercel.app/nueva-contra?idUsuario=${idUsuario}`;
 
           const transporter = nodemailer.createTransport({
             service: 'gmail',
