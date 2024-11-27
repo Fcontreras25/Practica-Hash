@@ -2,11 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mysql from 'mysql2';
-
+import 'dotenv/config';
 import setupCrearCuentaRoutes from './crearCuenta.js';
 import setupRestablecerCtRoutes from './restablecerCt.js';
 import setupNuevaContraRoutes from './nuevaContra.js';
 import setupLoginRoutes from './login.js';
+import { Pool } from 'pg';
 
 const app = express();
 const PORT = 3000;
@@ -16,20 +17,14 @@ app.use(bodyParser.json());
 
 app.use('/recursos', express.static('recursos'));
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'login',
+const db = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: { rejectUnauthorized: false }, // Necesario para conexiones seguras con Vercel Postgres
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error con la conexión a la base de datos:', err);
-    return;
-  }
-  console.log('Conexión con la base de datos establecida');
-});
+db.connect()
+  .then(() => console.log('Conexión con la base de datos establecida'))
+  .catch((err) => console.error('Error con la conexión a la base de datos:', err));
 
 app.use('/recursos', express.static('src/backend/recursos')); 
 

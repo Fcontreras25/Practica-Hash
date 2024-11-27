@@ -70,16 +70,16 @@ const setupRoutes = (db) => {
     pendingUsers.delete(token);
 
     const query = `
-      INSERT INTO usuarios (id_usuario, correo, contraseña, verificado)
-      VALUES (?, ?, ?, true)
-    `;
-    db.query(query, [idUsuario, correo, contra], (err) => {
-      if (err) {
+    INSERT INTO usuarios (id_usuario, correo, contraseña, verificado)
+    VALUES ($1, $2, $3, true)
+  `;
+    db.query(query, [idUsuario, correo, contra])
+      .then(() => res.status(200).send('Cuenta verificada y registrada exitosamente'))
+      .catch((err) => {
         console.error('Error al insertar usuario en la base de datos:', err);
-        return res.status(500).send('Error al registrar usuario');
-      }
-      res.status(200).send('Cuenta verificada y registrada exitosamente');
-    });
+        res.status(500).send('Error al registrar usuario');
+      });
+
   });
 
   return router;

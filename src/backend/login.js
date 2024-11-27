@@ -13,25 +13,23 @@ const setupLoginRoutes = (db) => {
             return res.status(400).json({ error: 'Formato de contraseña inválido.' });
         }
 
-        const query = 'SELECT * FROM usuarios WHERE id_usuario = ? AND contraseña = ?';
-
-        db.query(query, [usuario, password], (err, results) => {
-            if (err) {
-                console.error('Error al consultar la base de datos:', err);
-                return res.status(500).json({ error: 'Error interno del servidor.' });
+        const query = 'SELECT * FROM usuarios WHERE id_usuario = $1 AND contraseña = $2';
+        db.query(query, [usuario, password])
+          .then((results) => {
+            if (results.rowCount === 0) {
+              return res.status(401).json({ error: 'Credenciales incorrectas.' });
             }
-
-            if (results.length === 0) {
-                return res.status(401).json({ error: 'Credenciales incorrectas.' });
-            }
-
-            // Credenciales correctas
-            const user = results[0];
+            const user = results.rows[0];
             return res.status(200).json({
-                mensaje: 'Inicio de sesión exitoso.',
-                usuario: user.id_usuario, // Devuelve el nombre del usuario
+              mensaje: 'Inicio de sesión exitoso.',
+              usuario: user.id_usuario,
             });
-        });
+          })
+          .catch((err) => {
+            console.error('Error al consultar la base de datos:', err);
+            res.status(500).json({ error: 'Error interno del servidor.' });
+          });
+        
     });
 
     return router;

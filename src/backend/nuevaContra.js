@@ -21,21 +21,19 @@ const setupNuevaContraRoutes = (db) => {
             return res.status(400).json({ error: 'Formato de hash inválido.' });
         }
 
-        const query = 'UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?';
-
-        db.query(query, [hashedPassword, idUsuario], (err, result) => {
-            if (err) {
+        const query = 'UPDATE usuarios SET contraseña = $1 WHERE id_usuario = $2';
+        db.query(query, [hashedPassword, idUsuario])
+            .then((result) => {
+                if (result.rowCount === 0) {
+                    return res.status(404).json({ error: 'Usuario no encontrado.' });
+                }
+                return res.status(200).json({ mensaje: 'Contraseña actualizada correctamente' });
+            })
+            .catch((err) => {
                 console.error('Error al actualizar la contraseña:', err);
-                return res.status(500).json({ error: 'Error interno del servidor' });
-            }
+                res.status(500).json({ error: 'Error interno del servidor' });
+            });
 
-            if (result.affectedRows === 0) {
-                console.error('Usuario no encontrado:', idUsuario);
-                return res.status(404).json({ error: 'Usuario no encontrado.' });
-            }
-
-            return res.status(200).json({ mensaje: 'Contraseña actualizada correctamente' });
-        });
     });
 
     return router;
