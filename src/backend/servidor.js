@@ -1,13 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import mysql from 'mysql2';
 import 'dotenv/config';
 import setupCrearCuentaRoutes from './crearCuenta.js';
 import setupRestablecerCtRoutes from './restablecerCt.js';
 import setupNuevaContraRoutes from './nuevaContra.js';
 import setupLoginRoutes from './login.js';
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 
 const app = express();
 const PORT = 3000;
