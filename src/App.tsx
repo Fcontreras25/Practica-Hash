@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
-import Layout from "./Layout";
+import Layout from "./layout";
 import Crearcuenta from "./Crearcuenta";
 import Login from "./Login";
 import Nuevacontra from "./Nuevacontra";
