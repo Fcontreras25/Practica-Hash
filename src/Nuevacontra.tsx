@@ -23,8 +23,23 @@ const Nuevacontra: React.FC = () => {
         }
     }, [location]);
 
+    // Función para verificar contraseñas vulneradas (usando Pwned Passwords API)
+    const isPasswordPwned = async (password: string): Promise<boolean> => {
+        const hashedPassword = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+        const hexHash = Array.from(new Uint8Array(hashedPassword))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('')
+            .toUpperCase();
+        const prefix = hexHash.substring(0, 5);
+        const suffix = hexHash.substring(5);
+
+        const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+        const text = await response.text();
+        return text.includes(suffix);
+    };
+
     // Función para validar la contraseña según los estándares de Microsoft
-    const validarContrasena = (password: string): string | null => {
+    const validarContrasena = async (password: string): Promise<string | null> => {
         if (password.length < 8) {
             return 'La contraseña debe tener al menos 8 caracteres.';
         }
@@ -43,6 +58,12 @@ const Nuevacontra: React.FC = () => {
         if (['password', '123456', 'qwerty'].includes(password.toLowerCase())) {
             return 'La contraseña no debe ser común ni fácil de adivinar.';
         }
+
+        // Comprobar si la contraseña ha sido vulnerada previamente
+        if (await isPasswordPwned(password)) {
+            return 'La contraseña ha sido comprometida en una filtración de datos. Elige otra.';
+        }
+
         return null;
     };
 
@@ -64,7 +85,8 @@ const Nuevacontra: React.FC = () => {
             return;
         }
 
-        const errorValidacion = validarContrasena(nuevaContra);
+        // Validación de la nueva contraseña
+        const errorValidacion = await validarContrasena(nuevaContra);
         if (errorValidacion) {
             setError(errorValidacion);
             return;
@@ -111,9 +133,9 @@ const Nuevacontra: React.FC = () => {
             <div className="contenedor-nuevacontra">
                 <h2>Restablecimiento de Contraseña</h2>
                 <p>
-                    Ingresa una nueva contraseña para tu cuenta. La contraseña debe cumplir con los siguientes requisitos: Al menos 8 caracteres,
-                    una letra mayúscula,una letra minúscula,un número, un símbolo especial (@, $, !, %, *, ?, &).</p>
-
+                    Ingresa una nueva contraseña para tu cuenta. La contraseña debe cumplir con los siguientes requisitos: 
+                    Al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número, un símbolo especial (@, $, !, %, *, ?, &).
+                </p>
 
                 {error && <div className="error-mensaje">{error}</div>}
                 {success && <div className="exito-mensaje">{success}</div>}

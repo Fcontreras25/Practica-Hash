@@ -19,7 +19,7 @@ app.use('/recursos', express.static('recursos'));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'usuario',
+  password: '',
   database: 'login',
 });
 

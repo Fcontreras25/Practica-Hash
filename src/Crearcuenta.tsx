@@ -1,4 +1,4 @@
-import './index.css';
+import './index.css'; 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,27 @@ const Crearcuenta: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false); // Estado para mostrar el mensaje de carga
 
     const navigate = useNavigate();
+
+    // Función para verificar contraseñas vulneradas con Pwned Passwords
+    const isPasswordPwned = async (password: string): Promise<boolean> => {
+        const hashedPassword = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+        const hexHash = Array.from(new Uint8Array(hashedPassword))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('')
+            .toUpperCase();
+        const prefix = hexHash.substring(0, 5);
+        const suffix = hexHash.substring(5);
+
+        const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+        const text = await response.text();
+        return text.includes(suffix);
+    };
+
+    // Validar contraseñas predecibles
+    const isPredictablePassword = (password: string) => {
+        const predictablePatterns = ['123456', 'qwerty', 'password', 'abc123', '123123', '111111'];
+        return predictablePatterns.includes(password.toLowerCase());
+    };
 
     // Evaluar fortaleza de la contraseña
     const evaluatePasswordStrength = (password: string) => {
@@ -46,6 +67,18 @@ const Crearcuenta: React.FC = () => {
 
         if (contra.length < 8 || contra.length > 64) {
             setError('La contraseña debe tener entre 8 y 64 caracteres.');
+            setSuccessMessage('');
+            return;
+        }
+
+        if (isPredictablePassword(contra)) {
+            setError('La contraseña no puede ser una secuencia predecible, como "123456" o "qwerty".');
+            setSuccessMessage('');
+            return;
+        }
+
+        if (await isPasswordPwned(contra)) {
+            setError('La contraseña ha sido vulnerada anteriormente. Por favor, elige otra.');
             setSuccessMessage('');
             return;
         }
