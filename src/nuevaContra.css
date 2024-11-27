@@ -78,3 +78,7 @@
     background-color: #cfcbca !important;  /* Color original */
     color: rgb(0, 0, 0) !important;
 }
+
+.error-mensaje{
+    color: red;
+}

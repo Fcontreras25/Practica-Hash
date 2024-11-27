@@ -19,7 +19,7 @@ app.use('/recursos', express.static('recursos'));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '',
+  password: 'usuario',
   database: 'login',
 });
 
@@ -30,6 +30,8 @@ db.connect((err) => {
   }
   console.log('Conexión con la base de datos establecida');
 });
+
+app.use('/recursos', express.static('src/backend/recursos')); 
 
 // Configurar rutas con db
 app.use(setupLoginRoutes(db));

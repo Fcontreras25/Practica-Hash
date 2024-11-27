@@ -36,11 +36,15 @@ const setupRoutes = (db) => {
       to: correo,
       subject: 'Verificación de cuenta',
       html: `
-        <p>Hola ${idUsuario},</p>
-        <p>Para completar tu registro, haz clic en el siguiente enlace:</p>
-        <a href="${verificationLink}">Verificar cuenta</a>
-        <img src="http://localhost:3000/recursos/logo.png" alt="Logotipo" style="width: 150px; height: auto; margin-bottom: 20px;">
-        <p>Desciframos el presente para proteger tu futuro</p>
+         <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
+    <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
+      <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
+      <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
+      <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
+      <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
+      <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
+    </div>
+  </div>
       `,
     };
 

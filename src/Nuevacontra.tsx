@@ -23,6 +23,29 @@ const Nuevacontra: React.FC = () => {
         }
     }, [location]);
 
+    // Función para validar la contraseña según los estándares de Microsoft
+    const validarContrasena = (password: string): string | null => {
+        if (password.length < 8) {
+            return 'La contraseña debe tener al menos 8 caracteres.';
+        }
+        if (!/[A-Z]/.test(password)) {
+            return 'La contraseña debe contener al menos una letra mayúscula.';
+        }
+        if (!/[a-z]/.test(password)) {
+            return 'La contraseña debe contener al menos una letra minúscula.';
+        }
+        if (!/\d/.test(password)) {
+            return 'La contraseña debe contener al menos un número.';
+        }
+        if (!/[@$!%*?&]/.test(password)) {
+            return 'La contraseña debe contener al menos un símbolo especial (@, $, !, %, *, ?, &).';
+        }
+        if (['password', '123456', 'qwerty'].includes(password.toLowerCase())) {
+            return 'La contraseña no debe ser común ni fácil de adivinar.';
+        }
+        return null;
+    };
+
     // Función para hashear la contraseña usando SHA-256
     const hashPassword = async (password: string): Promise<string> => {
         const encoder = new TextEncoder();
@@ -41,6 +64,12 @@ const Nuevacontra: React.FC = () => {
             return;
         }
 
+        const errorValidacion = validarContrasena(nuevaContra);
+        if (errorValidacion) {
+            setError(errorValidacion);
+            return;
+        }
+
         if (nuevaContra !== confirmarContra) {
             setError('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
             return;
@@ -56,7 +85,7 @@ const Nuevacontra: React.FC = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario, // Asegúrate de enviar un string no vacío
+                    idUsuario,
                     nuevaContraseña: hashedPassword, // Contraseña hasheada en SHA-256
                 }),
             });
@@ -82,9 +111,9 @@ const Nuevacontra: React.FC = () => {
             <div className="contenedor-nuevacontra">
                 <h2>Restablecimiento de Contraseña</h2>
                 <p>
-                    Ingresa una nueva contraseña para tu cuenta. La contraseña debe contener al menos 8 caracteres,
-                    una letra mayúscula, una minúscula, un número y un símbolo.
-                </p>
+                    Ingresa una nueva contraseña para tu cuenta. La contraseña debe cumplir con los siguientes requisitos: Al menos 8 caracteres,
+                    una letra mayúscula,una letra minúscula,un número, un símbolo especial (@, $, !, %, *, ?, &).</p>
+
 
                 {error && <div className="error-mensaje">{error}</div>}
                 {success && <div className="exito-mensaje">{success}</div>}
