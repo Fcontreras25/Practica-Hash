@@ -28,7 +28,7 @@ const Criptografia2: React.FC = () => {
         const alturaLinea = 7;
         let y = 40;
 
-        lineas.forEach((linea) => {
+        lineas.forEach((linea: string) => {
             pdf.text(linea, margenes, y, { align: "justify" });
             y += alturaLinea;
         });
