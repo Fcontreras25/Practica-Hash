@@ -30,7 +30,7 @@ const setupRoutes = (db) => {
 
     pendingUsers.set(token, { idUsuario, correo, contra });
 
-    const verificationLink = `http://localhost:3000/api/verify?token=${token}`;
+    const verificationLink = `https://practica-hash.vercel.app/api/verify?token=${token}`;
     const mailOptions = {
       from: 'practicaHash@gmail.com',
       to: correo,
