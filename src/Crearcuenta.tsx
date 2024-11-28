@@ -1,4 +1,4 @@
-import './index.css'; 
+import './index.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const Crearcuenta: React.FC = () => {
 
     const navigate = useNavigate();
 
-    // Función para verificar contraseñas vulneradas con Pwned Passwords
+    // Validación de contraseñas vulneradas (Pwned Passwords)
     const isPasswordPwned = async (password: string): Promise<boolean> => {
         const hashedPassword = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
         const hexHash = Array.from(new Uint8Array(hashedPassword))

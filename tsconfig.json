@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "servidor.js"],
+  "include": ["src", "servidor.js", "api/crearCuenta.js", "api/login.js", "api/nuevaContra.js", "api/restablecerCt.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
