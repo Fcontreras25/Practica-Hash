@@ -12,15 +12,17 @@ const { Pool } = pkg;
 const app = express();
 const PORT = 3000;
 
+// Configuración de CORS
 app.use(cors({
   origin: 'https://practica-hash.vercel.app', // Dominio del frontend
-  methods: ['GET', 'POST'], // Métodos permitidos
-  allowedHeaders: ['Content-Type'],}));
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+// Middleware para parsear el cuerpo de las peticiones
 app.use(bodyParser.json());
 
-app.use('/recursos', express.static('recursos'));
-
-// Configuración de la conexión a la base de datos
+// Conexión a la base de datos
 const db = new Pool({
   connectionString: process.env.POSTGRES_URL,
   ssl: { rejectUnauthorized: false }, // Necesario para conexiones seguras con Neon
@@ -36,8 +38,7 @@ const db = new Pool({
   }
 })();
 
-// Configurar rutas con db
-app.use('/recursos', express.static('src/backend/recursos'));
+// Configuración de rutas
 app.use(setupLoginRoutes(db));
 app.use(setupCrearCuentaRoutes(db));
 app.use(setupRestablecerCtRoutes(db));
