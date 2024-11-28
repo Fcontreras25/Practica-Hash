@@ -12,7 +12,10 @@ const { Pool } = pkg;
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://practica-hash.vercel.app', // Dominio del frontend
+  methods: ['GET', 'POST'], // Métodos permitidos
+  allowedHeaders: ['Content-Type'],}));
 app.use(bodyParser.json());
 
 app.use('/recursos', express.static('recursos'));
