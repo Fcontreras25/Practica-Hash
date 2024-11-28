@@ -21,13 +21,12 @@ const setupRoutes = (db) => {
   router.post('/api/form', (req, res) => {
     const { idUsuario, correo, contra } = req.body;
 
-    // Validar que la contraseña ya esté hasheada
+    // Validar que la contraseña esté hasheada
     if (!/^[a-f0-9]{64}$/.test(contra)) { // SHA-256 produce un hash de 64 caracteres en hexadecimal
       return res.status(400).send('Formato de hash inválido.');
     }
 
     const token = crypto.randomBytes(32).toString('hex');
-
     pendingUsers.set(token, { idUsuario, correo, contra });
 
     const verificationLink = `https://practica-hash.vercel.app/api/verify?token=${token}`;
@@ -36,15 +35,15 @@ const setupRoutes = (db) => {
       to: correo,
       subject: 'Verificación de cuenta',
       html: `
-         <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
-    <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
-      <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
-      <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
-      <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
-      <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
-      <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
-    </div>
-  </div>
+        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
+            <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
+            <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
+            <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
+            <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
+            <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
+          </div>
+        </div>
       `,
     };
 
@@ -70,19 +69,18 @@ const setupRoutes = (db) => {
     pendingUsers.delete(token);
 
     const query = `
-    INSERT INTO usuarios (id_usuario, correo, contraseña, verificado)
-    VALUES ($1, $2, $3, true)
-  `;
+      INSERT INTO usuarios (id_usuario, correo, contraseña, verificado)
+      VALUES ($1, $2, $3, true)
+    `;
     db.query(query, [idUsuario, correo, contra])
       .then(() => res.status(200).send('Cuenta verificada y registrada exitosamente'))
       .catch((err) => {
         console.error('Error al insertar usuario en la base de datos:', err);
         res.status(500).send('Error al registrar usuario');
       });
-
   });
 
   return router;
 };
 
-export default setupRoutes; 
+export default setupRoutes;
