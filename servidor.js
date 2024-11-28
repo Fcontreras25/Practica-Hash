@@ -2,10 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import 'dotenv/config';
-import setupCrearCuentaRoutes from './crearCuenta.js';
-import setupRestablecerCtRoutes from './restablecerCt.js';
-import setupNuevaContraRoutes from './nuevaContra.js';
-import setupLoginRoutes from './login.js';
+import setupCrearCuentaRoutes from './src/backend/crearCuenta.js';
+import setupRestablecerCtRoutes from './src/backend/restablecerCt.js';
+import setupNuevaContraRoutes from './src/backend/nuevaContra.js';
+import setupLoginRoutes from './src/backend/login.js';
 import pkg from 'pg';
 const { Pool } = pkg;
 
