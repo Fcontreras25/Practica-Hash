@@ -12,9 +12,9 @@ const { Pool } = pkg;
 const app = express();
 const PORT = 3000;
 
-// Configuración de CORS
+// Configuración de CORS combinada
 app.use(cors({
-  origin: 'https://practica-hash.vercel.app', // Dominio del frontend
+  origin: ['https://practica-hash.vercel.app', 'http://localhost:5173'], // Soporta múltiples dominios
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
