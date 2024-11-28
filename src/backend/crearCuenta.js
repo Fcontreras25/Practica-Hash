@@ -19,6 +19,10 @@ const pendingUsers = new Map(); // { token: { idUsuario, correo, contra } }
 const setupRoutes = (db) => {
   // Ruta para manejar la creación de cuentas
   router.post('/api/form', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todos los orígenes
+    res.setHeader('Access-Control-Allow-Methods', 'POST'); // Métodos permitidos
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
     const { idUsuario, correo, contra } = req.body;
 
     // Validar que la contraseña esté hasheada
@@ -29,7 +33,7 @@ const setupRoutes = (db) => {
     const token = crypto.randomBytes(32).toString('hex');
     pendingUsers.set(token, { idUsuario, correo, contra });
 
-    const verificationLink = `https://practica-hash.vercel.app/api/verify?token=${token}`;
+    const verificationLink = `https://practica-hash-ovkm.vercel.app/api/verify?token=${token}`;
     const mailOptions = {
       from: 'practicaHash@gmail.com',
       to: correo,

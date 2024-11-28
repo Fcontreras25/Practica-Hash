@@ -101,7 +101,7 @@ const Nuevacontra: React.FC = () => {
             // Hashear la contraseña antes de enviarla al servidor
             const hashedPassword = await hashPassword(nuevaContra);
 
-            const response = await fetch('http://localhost:3000/guardarNuevaContra', {
+            const response = await fetch('https://practica-hash-ovkm.vercel.app/guardarNuevaContra', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

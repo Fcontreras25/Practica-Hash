@@ -10,14 +10,15 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 const app = express();
-const PORT = 3000;
 
 // Configuración de CORS combinada
 app.use(cors({
-  origin: ['https://practica-hash.vercel.app', 'http://localhost:5173'], // Soporta múltiples dominios
+  origin: ['https://practica-hash-ovkm.vercel.app', 'http://localhost:5173'], // Soporta múltiples dominios
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
+
+app.options('*', cors()); // Habilitar CORS para solicitudes OPTIONS
 
 // Middleware para parsear el cuerpo de las peticiones
 app.use(bodyParser.json());
@@ -45,6 +46,6 @@ app.use(setupRestablecerCtRoutes(db));
 app.use(setupNuevaContraRoutes(db));
 
 // Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+export default app;
+
+

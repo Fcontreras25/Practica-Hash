@@ -20,7 +20,7 @@ const Restablecercontra: React.FC = () => {
 
         console.log(`Usuario enviado: ${usuario}`); 
         try {
-            const response = await fetch('http://localhost:3000/verificarUsuario', {
+            const response = await fetch('https://practica-hash-ovkm.vercel.app/verificarUsuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

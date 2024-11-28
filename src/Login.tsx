@@ -28,7 +28,7 @@ const Login: React.FC = () => {
         try {
             const hashedPassword = await hashPassword(password);
 
-            const response = await fetch('http://localhost:3000/validarInicio', {
+            const response = await fetch('https://practica-hash-ovkm.vercel.app/api/validarInicio', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
