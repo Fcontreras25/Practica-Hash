@@ -11,8 +11,8 @@ const db = new Pool({
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Usa variables de entorno
-    pass: process.env.EMAIL_PASS, // Usa variables de entorno
+    user: 'practicaHash@gmail.com',
+    pass: 'gijq rmyo utej glhe',
   },
 });
 
