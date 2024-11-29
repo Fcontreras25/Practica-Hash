@@ -1,5 +1,5 @@
 import { db } from '@vercel/postgres';
-import { pendingUsers } from './crearCuenta'; 
+import { pendingUsers } from './crearCuenta.js'; 
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
