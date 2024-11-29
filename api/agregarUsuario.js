@@ -4,32 +4,34 @@ import fs from 'fs/promises';
 // Ruta al archivo JSON en la carpeta temporal
 const tokenFilePath = '/tmp/tokens.json';
 
-// Verificar y crear el archivo si no existe o está vacío
-async function ensureTokenFileExists() {
+// Función para cargar los tokens desde el archivo JSON
+async function loadTokens() {
   try {
-    await fs.access(tokenFilePath); // Verifica si el archivo existe
-    const data = await fs.readFile(tokenFilePath, 'utf8');
-    if (!data.trim()) {
-      // Si el archivo está vacío, lo inicializa con un array vacío
-      await fs.writeFile(tokenFilePath, '[]', 'utf8');
-    }
-  } catch {
-    // Si el archivo no existe, lo crea con un array vacío
-    await fs.writeFile(tokenFilePath, '[]', 'utf8');
+    const data = await fs.readFile(tokenFilePath, 'utf8').catch(() => '[]');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error al cargar tokens desde el archivo:', err);
+    return [];
   }
 }
 
-// Asegurarse de que el archivo exista al iniciar
-await ensureTokenFileExists();
+// Función para guardar los tokens en el archivo JSON
+async function saveTokens(tokens) {
+  try {
+    await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Error al guardar tokens en el archivo:', err);
+  }
+}
 
+// Exportar la función principal
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const { token } = req.query; // Recuperar el token enviado en la consulta
+    const { token } = req.query;
 
     try {
-      // Leer el archivo JSON
-      const data = await fs.readFile(tokenFilePath, 'utf8');
-      const tokens = JSON.parse(data || '[]'); // Manejar archivo vacío
+      // Cargar los tokens existentes
+      const tokens = await loadTokens();
 
       // Buscar el token
       const index = tokens.findIndex((t) => t.token === token);
@@ -42,13 +44,13 @@ export default async function handler(req, res) {
       // Validar si el token ha expirado
       if (Date.now() > expiracion) {
         tokens.splice(index, 1); // Eliminar token expirado
-        await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2));
+        await saveTokens(tokens);
         return res.status(400).send('Token expirado');
       }
 
       // Eliminar el token después de usarlo
       tokens.splice(index, 1);
-      await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2));
+      await saveTokens(tokens);
 
       // Registrar al usuario en la base de datos
       const client = await db.connect();

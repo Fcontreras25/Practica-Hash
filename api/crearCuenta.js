@@ -3,9 +3,6 @@ import nodemailer from 'nodemailer';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Almacén temporal en memoria
-export const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
-
 // Ruta al archivo JSON en la carpeta temporal
 const tokenFilePath = '/tmp/tokens.json';
 
@@ -22,26 +19,23 @@ const transporter = nodemailer.createTransport({
 async function loadTokens() {
   try {
     const data = await fs.readFile(tokenFilePath, 'utf8').catch(() => '[]');
-    const tokens = JSON.parse(data);
-    tokens.forEach(({ token, ...rest }) => pendingUsers.set(token, rest));
+    return JSON.parse(data);
   } catch (err) {
     console.error('Error al cargar tokens desde el archivo:', err);
+    return [];
   }
 }
 
 // Función para guardar los tokens del Map en el archivo JSON
-async function saveTokens() {
+async function saveTokens(tokens) {
   try {
-    const tokens = Array.from(pendingUsers, ([token, data]) => ({ token, ...data }));
-    await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2));
+    await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2), 'utf8');
   } catch (err) {
     console.error('Error al guardar tokens en el archivo:', err);
   }
 }
 
-// Cargar tokens al iniciar
-await loadTokens();
-
+// Exportar la función principal
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { idUsuario, correo, contra } = req.body;
@@ -55,14 +49,17 @@ export default async function handler(req, res) {
     const token = crypto.randomBytes(32).toString('hex');
     const expiracion = Date.now() + 3600 * 1000; // Expira en 1 hora
 
-    // Guardar token en el almacenamiento temporal
-    pendingUsers.set(token, { idUsuario, correo, contra, expiracion });
+    // Cargar los tokens existentes
+    const tokens = await loadTokens();
 
-    // Guardar tokens en el archivo JSON
-    await saveTokens();
+    // Agregar el nuevo token
+    tokens.push({ token, idUsuario, correo, contra, expiracion });
 
-    // Log para depuración: Token generado con éxito
-    console.log(`Token generado con éxito: ${token}`);
+    // Guardar tokens actualizados
+    await saveTokens(tokens);
+
+    // Log para depuración
+    console.log(`Token generado: ${token}`);
 
     // Enlace de verificación
     const verificationLink = `https://ciphertech.vercel.app/api/agregarUsuario?token=${token}`;
@@ -73,43 +70,28 @@ export default async function handler(req, res) {
       to: correo,
       subject: 'Verificación de cuenta',
       html: `
-        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
-          <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
-            <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
-            <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
-            <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
-            <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
-            <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
-          </div>
+      <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
+        <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
+          <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
+          <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
+          <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
+          <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
+          <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
         </div>
-      `,
+      </div>
+    `,
     };
 
     try {
       // Enviar correo
       await transporter.sendMail(mailOptions);
-      res.status(200).send('Correo de verificación enviado. Revisa tu bandeja de entrada.');
+      res.status(200).send('Correo de verificación enviado.');
     } catch (err) {
       console.error('Error al enviar correo:', err);
-      res.status(500).send('Error al enviar el correo de verificación.');
+      res.status(500).send('Error al enviar el correo.');
     }
   } else {
     res.setHeader('Allow', ['POST']);
     res.status(405).send('Método no permitido');
   }
 }
-
-// Limpieza automática de tokens expirados
-setInterval(async () => {
-  const now = Date.now();
-  let tokensChanged = false;
-  for (const [token, data] of pendingUsers) {
-    if (data.expiracion < now) {
-      pendingUsers.delete(token);
-      tokensChanged = true;
-    }
-  }
-  if (tokensChanged) {
-    await saveTokens();
-  }
-}, 60000); // Ejecuta cada minuto
