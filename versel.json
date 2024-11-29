@@ -15,12 +15,16 @@
     {
       "src": "api/**/*.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "build/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/tokens.json",
-      "status": 404
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
