@@ -6,6 +6,9 @@
     },
     "api/crearCuenta.js": {
       "runtime": "nodejs18.x"
+    },
+    "api/guardarNuevaContra.js": {
+      "runtime": "nodejs18.x"
     }
   },
   "builds": [
