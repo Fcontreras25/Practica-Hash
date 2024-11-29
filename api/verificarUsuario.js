@@ -1,20 +1,5 @@
 import nodemailer from 'nodemailer';
-
-// Conexión a la base de datos Neon
-import {db} from '@vercel/postgres';
-
-export default async function handler(request, response) {
-  db = await db.connect();   
-}
-
-// Configurar el transporte de correo
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'practicaHash@gmail.com',
-    pass: 'gijq rmyo utej glhe',
-  },
-});
+import { db } from '@vercel/postgres';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -25,15 +10,27 @@ export default async function handler(req, res) {
     }
 
     try {
+      // Connect to the database
+      const client = await db.connect();
+
       // Consultar usuario en la base de datos
       const query = 'SELECT * FROM usuarios WHERE id_usuario = $1';
-      const result = await db.query(query, [usuario]);
+      const result = await client.query(query, [usuario]);
 
       if (result.rowCount > 0) {
         const correo = result.rows[0].correo;
         const idUsuario = result.rows[0].id_usuario;
 
         const enlaceRestablecimiento = `https://practica-hash-ovkm.vercel.app/nueva-contra?idUsuario=${idUsuario}`;
+
+        // Configurar el transporte de correo
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'practicaHash@gmail.com',
+            pass: 'gijq rmyo utej glhe',
+          },
+        });
 
         // Opciones del correo
         const mailOptions = {
