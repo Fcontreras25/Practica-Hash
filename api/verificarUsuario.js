@@ -38,18 +38,18 @@ export default async function handler(req, res) {
           to: correo,
           subject: 'Restablecimiento de contraseña',
           html: `
-        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
-          <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">
-            <h1>Restablecimiento de contraseña</h1>
-              <p>Estimado/a ${idUsuario},</p>
-              <p>Para restablecer tu contraseña, haz clic en el enlace a continuación:</p>
-              <a href="${enlaceRestablecimiento}" style="padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none;">Restablecer contraseña</a>
-              <p>Si no solicitaste este cambio, ignora este mensaje.</p>
-            <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
+          <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f4f4f9; padding: 20px; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; border: 1px solid #ddd;">  
+          <h1>Restablecimiento de contraseña</h1>
+            <p>Estimado/a ${idUsuario},</p>
+            <p>Para restablecer tu contraseña, haz clic en el enlace a continuación:</p>
+            <a href="${enlaceRestablecimiento}" style="padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none;">Restablecer contraseña</a>
+            <p>Si no solicitaste este cambio, ignora este mensaje.</p>
             <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
+
           </div>
-        </div>
-      `,
+          </div>
+        `,
         };
 
         // Enviar correo
