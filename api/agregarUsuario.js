@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
       try {
         const query = `
-        INSERT INTO public.usuarios (id_usuarios, correo, contrasena, verificado)
+        INSERT INTO public.usuarios (id_usuario, correo, contraseña, verificado)
         VALUES ($1, $2, $3, true)
       `;
       await client.query(query, [idUsuario, correo, contra]);
