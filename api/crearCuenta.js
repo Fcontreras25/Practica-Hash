@@ -1,8 +1,13 @@
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import fs from 'fs/promises';
+import path from 'path';
 
 // Almacén temporal en memoria
 export const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
+
+// Ruta al archivo JSON
+const tokenFilePath = path.resolve('./tokens.json');
 
 // Configuración de nodemailer
 const transporter = nodemailer.createTransport({
@@ -12,6 +17,30 @@ const transporter = nodemailer.createTransport({
     pass: 'gijq rmyo utej glhe',
   },
 });
+
+// Función para cargar tokens desde el archivo JSON al Map
+async function loadTokens() {
+  try {
+    const data = await fs.readFile(tokenFilePath, 'utf8').catch(() => '[]');
+    const tokens = JSON.parse(data);
+    tokens.forEach(({ token, ...rest }) => pendingUsers.set(token, rest));
+  } catch (err) {
+    console.error('Error al cargar tokens desde el archivo:', err);
+  }
+}
+
+// Función para guardar los tokens del Map en el archivo JSON
+async function saveTokens() {
+  try {
+    const tokens = Array.from(pendingUsers, ([token, data]) => ({ token, ...data }));
+    await fs.writeFile(tokenFilePath, JSON.stringify(tokens, null, 2));
+  } catch (err) {
+    console.error('Error al guardar tokens en el archivo:', err);
+  }
+}
+
+// Cargar tokens al iniciar
+await loadTokens();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -24,11 +53,13 @@ export default async function handler(req, res) {
 
     // Generar token de verificación
     const token = crypto.randomBytes(32).toString('hex');
-
+    const expiracion = Date.now() + 3600 * 1000; // Expira en 1 hora
 
     // Guardar token en el almacenamiento temporal
-    const expiracion = Date.now() + 3600 * 1000; // Expira en 1 hora
     pendingUsers.set(token, { idUsuario, correo, contra, expiracion });
+
+    // Guardar tokens en el archivo JSON
+    await saveTokens();
 
     // Log para depuración: Token generado con éxito
     console.log(`Token generado con éxito: ${token}`);
@@ -49,7 +80,6 @@ export default async function handler(req, res) {
             <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
             <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
             <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
-
           </div>
         </div>
       `,
@@ -70,11 +100,16 @@ export default async function handler(req, res) {
 }
 
 // Limpieza automática de tokens expirados
-setInterval(() => {
+setInterval(async () => {
   const now = Date.now();
+  let tokensChanged = false;
   for (const [token, data] of pendingUsers) {
     if (data.expiracion < now) {
       pendingUsers.delete(token);
+      tokensChanged = true;
     }
+  }
+  if (tokensChanged) {
+    await saveTokens();
   }
 }, 60000); // Ejecuta cada minuto
