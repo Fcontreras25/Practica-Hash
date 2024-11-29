@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     console.log(`Token generado con éxito: ${token}`);
 
     // Enlace de verificación
-    const verificationLink = `https://https://ciphertech.vercel.app//api/agregarUsuario?token=${token}`;
+    const verificationLink = `https://ciphertech.vercel.app/api/agregarUsuario?token=${token}`;
 
     // Opciones del correo
     const mailOptions = {
