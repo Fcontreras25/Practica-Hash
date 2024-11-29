@@ -5,6 +5,24 @@ import path from 'path';
 // Ruta al archivo JSON
 const tokenFilePath = path.resolve('./tokens.json');
 
+// Verificar y crear el archivo si no existe o está vacío
+async function ensureTokenFileExists() {
+  try {
+    await fs.access(tokenFilePath); // Verifica si el archivo existe
+    const data = await fs.readFile(tokenFilePath, 'utf8');
+    if (!data.trim()) {
+      // Si el archivo está vacío, lo inicializa con un array vacío
+      await fs.writeFile(tokenFilePath, '[]', 'utf8');
+    }
+  } catch {
+    // Si el archivo no existe, lo crea con un array vacío
+    await fs.writeFile(tokenFilePath, '[]', 'utf8');
+  }
+}
+
+// Asegurarse de que el archivo exista al iniciar
+await ensureTokenFileExists();
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const { token } = req.query; // Recuperar el token enviado en la consulta
@@ -12,7 +30,7 @@ export default async function handler(req, res) {
     try {
       // Leer el archivo JSON
       const data = await fs.readFile(tokenFilePath, 'utf8');
-      const tokens = JSON.parse(data);
+      const tokens = JSON.parse(data || '[]'); // Manejar archivo vacío
 
       // Buscar el token
       const index = tokens.findIndex((t) => t.token === token);
