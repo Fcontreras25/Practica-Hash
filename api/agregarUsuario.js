@@ -20,10 +20,10 @@ export default async function handler(req, res) {
 
       try {
         const query = `
-          INSERT INTO usuarios (id_usuario, correo, contrasena, verificado)
-          VALUES ($1, $2, $3, true)
-        `;
-        await client.query(query, [idUsuario, correo, contra]);
+        INSERT INTO public.usuarios (id_usuario, correo, contrasena, verificado)
+        VALUES ($1, $2, $3, true)
+      `;
+      await client.query(query, [idUsuario, correo, contra]);
 
         res.status(200).send('Cuenta verificada y registrada exitosamente.');
       } catch (err) {
