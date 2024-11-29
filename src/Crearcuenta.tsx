@@ -93,7 +93,7 @@ const Crearcuenta: React.FC = () => {
                 .map((b) => b.toString(16).padStart(2, '0'))
                 .join('');
 
-            const response = await fetch('https://practica-hash-ovkm.vercel.app/api/form', {
+            const response = await fetch("/api/crearCuenta", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const Crearcuenta: React.FC = () => {
 
                     setTimeout(() => {
                         navigate('/');
-                    }, 3000);
+                    }, 4000);
                 } else {
                     const errorMsg = await response.text();
                     setError(`Error del servidor: ${errorMsg}`);
@@ -191,15 +191,15 @@ const Crearcuenta: React.FC = () => {
                 {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
                 {successMessage && <p className="success-message" style={{ color: 'green' }}>{successMessage}</p>}
                 <div className="col-auto d-flex justify-content-between">
-                    <button type="submit" className="btn btn-primary mb-3 btn1">
-                        Crear
-                    </button>
                     <button
                         type="button"
                         className="btn btn-secondary mb-3 btn1"
                         onClick={() => navigate('/')}
                     >
-                        Volver al Login
+                        Regresar
+                    </button>
+                    <button type="submit" className="btn btn-primary mb-3 btn1">
+                        Crear cuenta
                     </button>
                 </div>
             </form>

@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
+// Almacén temporal en memoria
+const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
+
 // Configuración de nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -9,9 +12,6 @@ const transporter = nodemailer.createTransport({
     pass: 'gijq rmyo utej glhe',
   },
 });
-
-// Almacén temporal para usuarios no verificados
-const pendingUsers = new Map(); // { token: { idUsuario, correo, contra } }
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -24,10 +24,17 @@ export default async function handler(req, res) {
 
     // Generar token de verificación
     const token = crypto.randomBytes(32).toString('hex');
-    pendingUsers.set(token, { idUsuario, correo, contra });
+
+
+    // Guardar token en el almacenamiento temporal
+    const expiracion = Date.now() + 3600 * 1000; // Expira en 1 hora
+    pendingUsers.set(token, { idUsuario, correo, contra, expiracion });
+
+    // Log para depuración: Token generado con éxito
+    console.log(`Token generado con éxito: ${token}`);
 
     // Enlace de verificación
-    const verificationLink = `https://practica-hash-ovkm.vercel.app/api/verify?token=${token}`;
+    const verificationLink = `https://https://ciphertech.vercel.app//api/agregarUsuario?token=${token}`;
 
     // Opciones del correo
     const mailOptions = {
@@ -40,22 +47,34 @@ export default async function handler(req, res) {
             <p style="color: #333; font-size: 18px;">Hola ${idUsuario},</p>
             <p style="color: #555; font-size: 16px;">Para completar tu registro, haz clic en el siguiente enlace:</p>
             <a href="${verificationLink}" style="display: inline-block; background-color: #28a745; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin: 20px 0; font-size: 16px;">Verificar cuenta</a>
-            <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
             <p style="color: #555; font-size: 14px;">Desciframos el presente para proteger tu futuro</p>
+            <img src="https://drive.google.com/uc?id=1f-7y3I_YdU_AiJ6IpSEdWpn1_E8b_22h" alt="Logotipo" style="width: 150px; height: auto; margin-top: 30px;">
+
           </div>
         </div>
       `,
     };
 
     try {
+      // Enviar correo
       await transporter.sendMail(mailOptions);
       res.status(200).send('Correo de verificación enviado. Revisa tu bandeja de entrada.');
     } catch (err) {
-      console.error('Error al enviar el correo:', err);
-      res.status(500).send('Error al enviar el correo de verificación');
+      console.error('Error al enviar correo:', err);
+      res.status(500).send('Error al enviar el correo de verificación.');
     }
   } else {
     res.setHeader('Allow', ['POST']);
     res.status(405).send('Método no permitido');
   }
 }
+
+// Limpieza automática de tokens expirados
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, data] of pendingUsers) {
+    if (data.expiracion < now) {
+      pendingUsers.delete(token);
+    }
+  }
+}, 60000); // Ejecuta cada minuto

@@ -1,11 +1,11 @@
-import { Pool } from 'pg';
 import nodemailer from 'nodemailer';
 
-// Configurar la conexión a Neon
-const db = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
-});
+// Conexión a la base de datos Neon
+import {db} from '@vercel/postgres';
+
+export default async function handler(request, response) {
+  db = await db.connect();   
+}
 
 // Configurar el transporte de correo
 const transporter = nodemailer.createTransport({
