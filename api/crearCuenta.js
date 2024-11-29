@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
 // Almacén temporal en memoria
-const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
+export const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
 
 // Configuración de nodemailer
 const transporter = nodemailer.createTransport({

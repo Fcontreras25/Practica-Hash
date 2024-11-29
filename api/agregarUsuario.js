@@ -1,5 +1,5 @@
 import { db } from '@vercel/postgres';
-import { pendingUsers } from './crearCuenta'; // Importamos el objeto `Map` desde crearCuenta.js
+import { pendingUsers } from './crearCuenta'; 
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
