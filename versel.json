@@ -13,5 +13,11 @@
       "src": "api/**/*.js",
       "use": "@vercel/node"
     }
+  ],
+  "routes": [
+    {
+      "src": "/tokens.json",
+      "status": 404
+    }
   ]
 }
