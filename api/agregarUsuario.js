@@ -1,9 +1,8 @@
 import { db } from '@vercel/postgres';
 import fs from 'fs/promises';
-import path from 'path';
 
-// Ruta al archivo JSON
-const tokenFilePath = path.resolve('./tokens.json');
+// Ruta al archivo JSON en la carpeta temporal
+const tokenFilePath = '/tmp/tokens.json';
 
 // Verificar y crear el archivo si no existe o está vacío
 async function ensureTokenFileExists() {

@@ -6,8 +6,8 @@ import path from 'path';
 // Almacén temporal en memoria
 export const pendingUsers = new Map(); // { token: { idUsuario, correo, contra, expiracion } }
 
-// Ruta al archivo JSON
-const tokenFilePath = path.resolve('./tokens.json');
+// Ruta al archivo JSON en la carpeta temporal
+const tokenFilePath = '/tmp/tokens.json';
 
 // Configuración de nodemailer
 const transporter = nodemailer.createTransport({
