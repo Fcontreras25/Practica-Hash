@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { db } from '@vercel/postgres';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
