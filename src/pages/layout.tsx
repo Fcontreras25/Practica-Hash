@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './layout.css';
-import logo from '@/backend/recursos/logo.png';
 
 const Layout: React.FC = () => {
     const location = useLocation();
@@ -19,7 +18,7 @@ const Layout: React.FC = () => {
             {rutasConHeader.includes(location.pathname) && (
                 <header className="header">
                     <img
-                        src={logo}
+                        src="/recursos/logo.png" // Ruta relativa desde la carpeta `public`
                         alt="Logotipo"
                         className="logo-header"
                     />
@@ -35,7 +34,7 @@ const Layout: React.FC = () => {
 
             <footer className="footer">
                 <img
-                    src={logo}
+                    src="/recursos/logo.png" // Ruta relativa desde la carpeta `public`
                     alt="Logotipo del Footer"
                     className="logo-footer"
                 />
