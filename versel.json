@@ -9,6 +9,9 @@
     },
     "api/guardarNuevaContra.js": {
       "runtime": "nodejs18.x"
+    },
+    "api/redireccionar.js": {
+      "runtime": "nodejs18.x"
     }
   },
   "builds": [

@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const correo = result.rows[0].correo;
         const idUsuario = result.rows[0].id_usuario;
 
-        const enlaceRestablecimiento = `https://practica-hash-ovkm.vercel.app/nueva-contra?idUsuario=${idUsuario}`;
+        const enlaceRestablecimiento = `https://practica-hash-ovkm.vercel.app/redireccionar?idUsuario=${idUsuario}`;
 
         // Configurar el transporte de correo
         const transporter = nodemailer.createTransport({
