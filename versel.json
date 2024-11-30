@@ -16,10 +16,6 @@
       "dest": "/api/$1"
     },
     {
-      "src": "^/nueva-contra",
-      "dest": "/index.html"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
