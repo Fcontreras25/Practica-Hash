@@ -1,37 +1,27 @@
 {
   "version": 2,
   "functions": {
-    "api/agregarUsuario.js": {
-      "runtime": "nodejs18.x"
-    },
-    "api/crearCuenta.js": {
-      "runtime": "nodejs18.x"
-    },
-    "api/guardarNuevaContra.js": {
-      "runtime": "nodejs18.x"
-    },
-    "api/redireccionar.js": {
-      "runtime": "nodejs18.x"
-    }
+    "api/agregarUsuario.js": { "runtime": "nodejs18.x" },
+    "api/crearCuenta.js": { "runtime": "nodejs18.x" },
+    "api/guardarNuevaContra.js": { "runtime": "nodejs18.x" },
+    "api/redireccionar.js": { "runtime": "nodejs18.x" }
   },
   "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "build/**/*",
-      "use": "@vercel/static"
-    }
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "dist/**/*", "use": "@vercel/static" }
   ],
   "routes": [
-  {
-    "src": "/nueva-contra",
-    "dest": "/index.html"
-  },
-  {
-    "src": "/(.*)",
-    "dest": "/index.html"
-  }
-]
+    {
+      "src": "^/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "^/nueva-contra",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }

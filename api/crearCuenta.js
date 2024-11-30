@@ -35,6 +35,15 @@ export default async function handler(req, res) {
          return res.status(409).send('El correo ya está registrado.');
        }
 
+      // Verificar si el correo ya existe
+      const consultaUsuario = 'SELECT 1 FROM public.usuarios WHERE id_usuario = $1';
+      const resultado = await client.query(checkQuery, [correo]);
+
+      if (resultado.rows.length > 0) {
+        // Si el correo ya está registrado
+        return res.status(409).send('El usuario ya existe.');
+      } 
+
       // Generar un token JWT con la información del usuario
       const token = jwt.sign(
         { idUsuario, correo, contra }, // Datos que se incluirán en el token
