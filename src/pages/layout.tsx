@@ -1,27 +1,25 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './layout.css';
+import logo from '@/backend/recursos/logo.png';
 
 const Layout: React.FC = () => {
-    const location = useLocation(); // Detectar la ruta actual
+    const location = useLocation();
     const navigate = useNavigate();
 
-    // Función para cerrar sesión
     const cerrarSesion = () => {
         localStorage.removeItem('usuario'); // Eliminar usuario del almacenamiento local
         navigate('/'); // Redirigir al login
     };
 
-    // Rutas donde se debe mostrar el header
     const rutasConHeader = ['/bienvenida', '/criptografia1', '/criptografia2', '/criptografia3'];
 
     return (
         <div className="layout-container">
-            {/* Mostrar el header solo en las rutas indicadas */}
             {rutasConHeader.includes(location.pathname) && (
                 <header className="header">
                     <img
-                        src="src/backend/recursos/logo.png" // Ruta al logo
+                        src={logo}
                         alt="Logotipo"
                         className="logo-header"
                     />
@@ -31,15 +29,13 @@ const Layout: React.FC = () => {
                 </header>
             )}
 
-            {/* Contenido principal */}
             <main className="main-content">
-                <Outlet /> {/* Aquí se renderizan las páginas dinámicamente */}
+                <Outlet />
             </main>
 
-            {/* Footer */}
             <footer className="footer">
                 <img
-                    src="src/backend/recursos/logo.png" // Ruta al logo del footer
+                    src={logo}
                     alt="Logotipo del Footer"
                     className="logo-footer"
                 />
