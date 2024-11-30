@@ -6,8 +6,8 @@ import { db } from '@vercel/postgres';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'practicaHash@gmail.com',
-    pass: 'gijq rmyo utej glhe', // Usa variables de entorno para seguridad en producción
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   },
 });
 
@@ -35,9 +35,9 @@ export default async function handler(req, res) {
          return res.status(409).send('El correo ya está registrado.');
        }
 
-      // Verificar si el correo ya existe
+      // Verificar si el usuario ya existe
       const consultaUsuario = 'SELECT 1 FROM public.usuarios WHERE id_usuario = $1';
-      const resultado = await client.query(checkQuery, [correo]);
+      const resultado = await client.query(consultaUsuario, [idUsuario]);
 
       if (resultado.rows.length > 0) {
         // Si el correo ya está registrado

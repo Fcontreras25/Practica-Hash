@@ -21,14 +21,24 @@ export default async function handler(req, res) {
         const correo = result.rows[0].correo;
         const idUsuario = result.rows[0].id_usuario;
 
-        const enlaceRestablecimiento = `https://ciphertech.vercel.app/api/redireccionar?idUsuario=${idUsuario}`;
+        // Generar un token JWT con la información del usuario
+        const token = jwt.sign(
+          { idUsuario }, // Datos que se incluirán en el token
+          process.env.JWT_SECRET,       // Clave secreta para firmar el token
+          { expiresIn: '1h' }           // El token expira en 1 hora
+        );
+
+        // Log para depuración
+        console.log(`Token generado: ${token}`);
+
+        const enlaceRestablecimiento = `https://ciphertech.vercel.app/api/redireccionar?token=${token}`;
 
         // Configurar el transporte de correo
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: 'practicaHash@gmail.com',
-            pass: 'gijq rmyo utej glhe',
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
           },
         });
 
