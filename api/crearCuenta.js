@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
+import { db } from '@vercel/postgres'; 
 
 // Configuración de nodemailer
 const transporter = nodemailer.createTransport({
@@ -19,8 +20,21 @@ export default async function handler(req, res) {
     if (!/^[a-f0-9]{64}$/.test(contra)) {
       return res.status(400).send('Formato de hash inválido.');
     }
-
+    
     try {
+
+       // Conectar a la base de datos
+       const client = await db.connect();
+
+       // Verificar si el correo ya existe
+       const checkQuery = 'SELECT 1 FROM public.usuarios WHERE correo = $1';
+       const result = await client.query(checkQuery, [correo]);
+ 
+       if (result.rows.length > 0) {
+         // Si el correo ya está registrado
+         return res.status(409).send('El correo ya está registrado.');
+       }
+
       // Generar un token JWT con la información del usuario
       const token = jwt.sign(
         { idUsuario, correo, contra }, // Datos que se incluirán en el token
