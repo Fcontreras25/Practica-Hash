@@ -1,13 +1,13 @@
 export default function handler(req, res) {
-    const { idUsuario } = req.query; // Captura el parámetro `idUsuario` desde la URL
-  
-    if (!idUsuario) {
-      // Si falta el parámetro, devuelve un error
-      res.status(400).json({ error: 'Falta el parámetro idUsuario.' });
-      return;
-    }
-  
-    // Redirige a la ruta /nueva-contra con el parámetro idUsuario
-    res.redirect(302, `/nueva-contra?idUsuario=${idUsuario}`);
+  const { idUsuario } = req.query;
+
+  if (!idUsuario) {
+    return res.status(400).json({ error: 'Falta el parámetro idUsuario' });
   }
-  
+
+  // Redirige a una URL absoluta (dominio completo)
+  res.writeHead(301, {
+    Location: `https://ciphertech.vercel.app/nueva-contra?idUsuario=${idUsuario}`
+  });
+  res.end();
+}
