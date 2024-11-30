@@ -22,9 +22,13 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  {
+    "src": "/nueva-contra",
+    "dest": "/index.html"
+  },
+  {
+    "src": "/(.*)",
+    "dest": "/index.html"
+  }
+]
 }
