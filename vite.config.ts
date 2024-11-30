@@ -1,28 +1,26 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist', // Carpeta de salida para los archivos de construcción
+    outDir: 'dist', // Generar el build en la carpeta dist
+    emptyOutDir: true, // Limpiar dist antes del build
     rollupOptions: {
       output: {
         manualChunks: {
-          // Divide los módulos de node_modules para optimizar la carga
-          vendor: ['react', 'react-router-dom'],
+          vendor: ['react', 'react-router-dom'], // Dividir los módulos comunes
         },
       },
     },
   },
   server: {
-    open: true, // Abre automáticamente en el navegador al iniciar el servidor
-    port: 3000, // Configura el puerto del servidor de desarrollo
+    open: true, // Abrir automáticamente en el navegador al iniciar el servidor
+    port: 3000, // Configurar el puerto de desarrollo
   },
   resolve: {
     alias: {
-      // Alias opcionales para rutas más cortas
-      '@': '/src',
+      '@': '/src', // Alias para acceder a recursos en src
     },
   },
 });
