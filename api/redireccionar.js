@@ -15,6 +15,8 @@ export default function handler(req, res) {
       const { idUsuario } = decoded;
 
       // Redirige a una URL absoluta (dominio completo)
+      console.log("ID del usuario recibido:", idUsuario);
+      
       res.writeHead(301, {
         Location: `https://ciphertech.vercel.app/nueva-contra?idUsuario=${idUsuario}`,
       });

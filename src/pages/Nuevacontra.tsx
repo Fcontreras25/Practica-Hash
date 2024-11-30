@@ -12,6 +12,8 @@ const Nuevacontra: React.FC = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    
+    console.log("ID del usuario recibido:", idUsuario);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
