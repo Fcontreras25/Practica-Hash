@@ -2,6 +2,7 @@ import './nuevaContra.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+
 const Nuevacontra: React.FC = () => {
     const [nuevaContra, setNewPassword] = useState('');
     const [confirmarContra, setConfirmPassword] = useState('');
