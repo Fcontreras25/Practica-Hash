@@ -1,10 +1,18 @@
 {
   "version": 2,
   "functions": {
-    "api/agregarUsuario.js": { "runtime": "nodejs18.x" },
-    "api/crearCuenta.js": { "runtime": "nodejs18.x" },
-    "api/guardarNuevaContra.js": { "runtime": "nodejs18.x" },
-    "api/redireccionar.js": { "runtime": "nodejs18.x" }
+    "api/agregarUsuario.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/crearCuenta.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/guardarNuevaContra.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/redireccionar.js": {
+      "runtime": "nodejs18.x"
+    }
   },
   "routes": [
     {
@@ -16,7 +24,10 @@
       "dest": "/index.html"
     }
   ],
-  "rewrites":[{
-    "source ":"/(.*)", "destiation": "/"
-  }]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
