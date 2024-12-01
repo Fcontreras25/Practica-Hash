@@ -18,7 +18,7 @@ export default function handler(req, res) {
       console.log("ID del usuario recibido:", idUsuario);
 
       res.writeHead(301, {
-        Location: `https://ciphertech.vercel.app/nueva-contra?idUsuario=${idUsuario}`,
+        Location: `/nueva-contra?idUsuario=${idUsuario}`,
       });
       console.log("Redirigiendo a:", `https://ciphertech.vercel.app/nueva-contra?idUsuario=${idUsuario}`);
       res.end(); // Termina la respuesta correctamente
