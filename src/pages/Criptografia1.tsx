@@ -36,7 +36,7 @@ const Criptografia1: React.FC = () => {
         const espacioExtra = 10;
         const imgY = y + espacioExtra;
 
-        const imgSrc = "src/backend/recursos/manuscrito.png";
+        const imgSrc = "backend/recursos/manuscrito.png";
         const img = new Image();
         img.src = imgSrc;
         img.onload = () => {
