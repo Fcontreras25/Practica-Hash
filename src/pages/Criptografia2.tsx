@@ -36,7 +36,7 @@ const Criptografia2: React.FC = () => {
         const espacioExtra = 10;
         const imgY = y + espacioExtra;
 
-        const imgSrc = "src/backend/recursos/gemini.png";
+        const imgSrc = "/recursos/gemini.png";
         const img = new Image();
         img.src = imgSrc;
         img.onload = () => {
@@ -81,7 +81,7 @@ const Criptografia2: React.FC = () => {
 
             <div className="imagen-container">
                 <img
-                    src="src/backend/recursos/gemini.png"
+                    src="/recursos/gemini.png"
                     alt="Logotipo de criptografía"
                     className="imagen-cripto"
                 />

@@ -36,7 +36,7 @@ const Criptografia3: React.FC = () => {
         const espacioExtra = 10;
         const imgY = y + espacioExtra;
 
-        const imgSrc = "src/backend/recursos/candado.png";
+        const imgSrc = "/recursos/candado.png";
         const img = new Image();
         img.src = imgSrc;
         img.onload = () => {
@@ -81,7 +81,7 @@ const Criptografia3: React.FC = () => {
 
             <div className="imagen-container">
                 <img
-                    src="src/backend/recursos/candado.png"
+                    src="/recursos/candado.png"
                     alt="Logotipo de criptografía"
                     className="imagen-cripto"
                 />
