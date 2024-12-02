@@ -83,7 +83,7 @@ const Criptografia1: React.FC = () => {
 
             <div className="imagen-container">
                 <img
-                    src="/recursos/manuscrito.png"
+                    src="/recursos/logo.png"
                     alt="Logotipo de criptografía"
                     className="imagen-cripto"
                 />
