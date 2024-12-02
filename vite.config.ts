@@ -3,9 +3,10 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/', // Indica que los recursos están en la raíz
   build: {
-    outDir: 'dist', // Generar el build en la carpeta dist
-    emptyOutDir: true, // Limpiar dist antes del build
+    outDir: 'dist',
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -15,12 +16,12 @@ export default defineConfig({
     },
   },
   server: {
-    open: true, // Abrir automáticamente en el navegador al iniciar el servidor
-    port: 3001, // Cambiar el puerto para evitar conflictos
+    open: true,
+    port: 3001,
   },
   resolve: {
     alias: {
-      '@': '/src', // Alias para acceder a recursos en src
+      '@': '/src',
     },
   },
 });
