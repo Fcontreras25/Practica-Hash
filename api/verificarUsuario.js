@@ -32,7 +32,7 @@ export default async function handler(req, res) {
         // Log para depuración
         console.log(`Token generado: ${token}`);
 
-        const enlaceRestablecimiento = `https://ciphertech.vercel.app/api/redireccionar?token=${token}`;
+        const enlaceRestablecimiento = `https://practica-hash.vercel.app/api/redireccionar?token=${token}`;
 
         // Configurar el transporte de correo
         const transporter = nodemailer.createTransport({
